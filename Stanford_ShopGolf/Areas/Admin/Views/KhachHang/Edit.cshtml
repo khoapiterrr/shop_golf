@@ -1,0 +1,32 @@
+﻿@model Stanford.ShopGolf.Business.Entity.KhachHang
+
+@{
+    ViewBag.Title = "Cập nhật khách hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="row ">
+    <div class="col-md-8  app-nav__item">
+        <label class="h5" style="color:black">Cập nhật khách hàng</label>
+    </div>
+    <div class="col-md-4 text-right app-nav__item">
+        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.Partial("_CreateOrUpdate", Model)
+                <div class="tile-footer text-right">
+                    <button class="btn btn-primary" type="submit">Cập nhật</button>
+                </div>
+
+            }
+
+        </div>
+    </div>
+</div>
+

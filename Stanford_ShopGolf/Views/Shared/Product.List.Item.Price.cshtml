@@ -1,0 +1,20 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@model ProductPriceViewModel
+@{
+    var isSaleOff = Model.Price < Model.OldPrice;
+
+}
+
+<div class="product-pricing">
+    <div class="price" itemprop="price">@Model.PriceDisplay</div>
+    @if (isSaleOff)
+    {
+        <div class="old-price">@Model.OldPriceDisplay</div>
+    }
+</div>
+@**
+    @if (isSaleOff)
+    {
+        <div class="save-price">Tiết kiệm @Model.Saved</div>
+    }
+**@

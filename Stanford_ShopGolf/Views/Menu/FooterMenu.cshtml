@@ -1,0 +1,14 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@model MenuViewModel
+@{
+    var targetId = "menu_" + (Model.Name.Replace(" ", string.Empty)).ToString();
+}
+<div class="footer-menu">
+    <a href="#" data-toggle="collapse" data-target="#@targetId" aria-expanded="true" aria-controls="@targetId"><h5>@Model.Name</h5></a>
+    <ul class="collapse show" id="@targetId">
+        @foreach (var item in Model.Children)
+        {
+            <li><a href="@item.Url" title="@item.HeadTitle">@item.Name</a></li>
+        }
+    </ul>
+</div>

@@ -1,0 +1,346 @@
+﻿@model Stanford.ShopGolf.Business.Entity.SanPham
+@{
+    ViewBag.Title = "Thêm mới sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style type="text/css">
+    .previewImg {
+        width: 80px;
+        height: 80px;
+        border: 1px #ebe8ea solid;
+        padding: 2px;
+        margin: 2px;
+    }
+
+    .remove {
+        display: block;
+        background: #444;
+        border: 1px solid black;
+        color: white;
+        text-align: center;
+        cursor: pointer;
+    }
+
+        .remove:hover {
+            background: white;
+            color: red;
+            font-size: 14px;
+            font-weight: bold;
+        }
+</style>
+<script type="text/javascript" src="~/Content/ckeditor/ckeditor.js">
+
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Gậy
+        $("#ColorId").select2();
+        $("#GenderId1").select2();
+        $("#SizeId").select2();
+        $("#HandId").select2();
+        $("#FlexId").select2();
+        $("#LoftId").select2();
+        $("#BounceId").select2();
+        $("#LengthId").select2();
+        $("#ShaftId").select2();
+        
+        //Giầy
+        $("#WidthId").select2();
+
+        //Áo
+        $("#WaistId").select2();
+        $("#InseamId").select2();
+
+        //bắt sự kiện change data của file
+        $("#fileUpload").change(function () {
+            //lấy dữ liệu trên fileupload
+            var path = $("input[type=file]").val();
+            var file = path.split('\\').pop();
+            $("#avatar").val(file);
+            var files = $("#fileUpload").get(0).files;
+            if (files.length > 0) {
+                //Gán ảnh vào hidden
+                //formData.append("fileImg", files[0]);
+            }
+            readURL(this);
+
+        });
+
+        var gia = new AutoNumeric('#GiaBan', {
+            currencySymbol: "đ ",
+            decimalCharacter: ",",
+            digitGroupSeparator: ".",
+            unformatOnSubmit: true
+
+        });
+
+        var giaGiam = new AutoNumeric('#GiaGiam', {
+            currencySymbol: "đ ",
+            decimalCharacter: ",",
+            digitGroupSeparator: ".",
+            unformatOnSubmit: true
+
+        });
+    });
+
+    //Hàm xem ảnh trước khi submit form
+    function readURL(input) {
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imageUpload').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    //Hiển thị ảnh preview của sản phẩm khi chọn nhiều
+    function preview_image() {
+        var total_file = document.getElementById("fUploads").files.length;
+        //alert(total_file);
+        $('#image_preview').text("");
+        for (var i = 0; i < total_file; i++) {
+            $('#image_preview').append("<div id='img" + i + "' style='float:left;'><img class='previewImg' src='" + URL.createObjectURL(event.target.files[i]) + "'/></div>");
+            /* $('#image_preview').append("<div id='img" + i + "' style='float:left;'><img class='previewImg' src='" + URL.createObjectURL(event.target.files[i]) + "'><span id='btnRemo" + i + "' onclick='RemoveImage(this);' class='remove'>x</span></div>");*/
+        }
+    }
+
+    function RemoveImage(img) {
+        $(img).parent().remove();
+    }
+</script>
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-th-list"></i> Thêm mới sản phẩm</h1>
+    </div>
+    <ul class="app-breadcrumb breadcrumb side">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item"><a href="/Admin/HomeAdmin">Shop Golf</a></li>
+        <li class="breadcrumb-item active"><a href='@Url.Action("DanhSach","SanPham")'>Quản lý sản phẩm</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-title">
+                <div class="row">
+                    <strong class="col-12">Nhập thông tin sản phẩm</strong>
+                </div>
+            </div>
+            <div class="tile-body">
+                @using (Html.BeginForm("ThemMoi", "SanPham", FormMethod.Post, new { encType = "multipart/form-data" }))
+                {@Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group  row">
+                    <label class="control-label col-md-2">Mã sản phẩm</label>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.MaSanPham, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.MaSanPham, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group  row">
+                    <label class="control-label col-md-2">Tên sản phẩm <span style="color:red">(*)</span></label>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.TenSanPham, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.TenSanPham, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="control-label col-md-2">Mô tả</label>
+                    <div class="col-md-10">
+                        @Html.TextAreaFor(model => model.MoTa, 10, 200, new { htmlAttributes = new { @id = "MoTa", @class = "form-control" } })
+                        <script>
+                            CKEDITOR.replace("MoTa");
+                        </script>
+                        @Html.ValidationMessageFor(model => model.MoTa, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="control-label col-md-2">Giá bán</label>
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.GiaBan, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.GiaBan, "", new { @class = "text-danger" })
+                    </div>
+                    <label class="control-label col-md-2">Giá giảm</label>
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.GiaGiam, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.GiaGiam, "", new { @class = "text-danger" })
+                    </div>
+                    <label class="control-label col-md-2">Số lượng</label>
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.SoLuong, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SoLuong, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="control-label col-md-2">Ảnh đại diện</label>
+                    <div class="col-md-10">
+                        <input type="text" id="avatar" name="avatar" data-val="false" data-val-required="Bạn cần thêm ảnh đại diện" class="form-control" placeholder="Tải ảnh lên..." style="font-style:italic">
+                        <input type="file" id="fileUpload" name="fileUpload" class="form-control-file" />
+                        <img id="imageUpload" width="40" height="40" />
+                        <input type="hidden" id="hImage" />
+                        <span id="error" style="color:red;"></span>
+
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="control-label col-md-2">Chủ đề <span style="color:red">(*)</span></label>
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.ChuDeId, (SelectList)ViewBag.ddlChuDe, "--- Chọn chủ đề ---", new { @class = "form-control" })
+                    </div>
+                    <label class="control-label col-md-2">Thương hiệu <span style="color:red">(*)</span></label>
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.BrandId, (SelectList)ViewBag.ddlBrand, "--- Chọn thương hiệu ---", new { @class = "form-control" })
+                    </div>
+
+                </div>
+                <div class="form-group row">
+                    <label class="control-label col-md-2">Xuất xứ</label>
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.QuocGiaId, (SelectList)ViewBag.ddlQuocGia, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.QuocGiaId, "", new { @class = "text-danger" })
+                    </div>
+                    <label class="control-label col-md-2">Trạng thái</label>
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.TrangThaiId, (SelectList)ViewBag.ddlTrangThai, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.TrangThaiId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="control-label col-md-2">Loại</label>
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.LoaiId, (SelectList)ViewBag.ddlLoai, "--- Chọn loại sản phẩm ---", new { @class = "form-control" })
+                    </div>
+
+                </div>
+
+                <div class="form-group row">
+                    <label class="control-label col-md-2">Màu</label>
+                    <div class="col-md-4">
+                        @Html.ListBox("ColorId", (MultiSelectList)ViewBag.ddlColor, new { multiple = "multiple", @class = "form-control" })
+                    </div>
+                    <label class="control-label col-md-2">Giới tính</label>
+                    <div class="col-md-4">
+                        @Html.ListBox("GenderId1", (MultiSelectList)ViewBag.ddlGender, new { multiple = "multiple", @class = "form-control" })
+                    </div>
+
+                </div>
+                <fieldset>
+                    <legend class="tile-title">Gậy golf</legend>
+                    <div class="form-group  row">
+                        <label class="control-label col-md-2">
+                            Độ cứng flex
+                        </label>
+                        <div class="col-md-4">
+                            @Html.ListBox("FlexId", (MultiSelectList)ViewBag.ddlFlex, new { multiple = "multiple", @class = "form-control" })
+                        </div>
+                        <label class="control-label col-md-2">
+                            Góc loft
+                        </label>
+                        <div class="col-md-4">
+                            @Html.ListBox("LoftId", (MultiSelectList)ViewBag.ddlLoft, new { multiple = "multiple", @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group  row">
+                        <label class="control-label col-md-2">
+                            Góc bounce
+                        </label>
+                        <div class="col-md-4">
+                            @Html.ListBox("BounceId", (MultiSelectList)ViewBag.ddlBounce, new { multiple = "multiple", @class = "form-control" })
+                        </div>
+                        <label class="control-label col-md-2">
+                            Length Size
+                        </label>
+                        <div class="col-md-4">
+                            @Html.ListBox("LengthId", (MultiSelectList)ViewBag.ddlLength, new { multiple = "multiple", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group  row">
+                        <label class="control-label col-md-2">Tay thuận</label>
+                        <div class="col-md-4">
+                            @Html.ListBox("HandId", (MultiSelectList)ViewBag.ddlHand, new { multiple = "multiple", @class = "form-control" })
+                        </div>
+                        <label class="control-label col-md-2">Shaft</label>
+                        <div class="col-md-4">
+                            @Html.ListBox("ShaftId", (MultiSelectList)ViewBag.ddlShaft, new { multiple = "multiple", @class = "form-control" })
+                        </div>
+                    </div>
+                </fieldset>
+                @*Thuộc tính giầy golf*@
+                <fieldset>
+                    <legend class="tile-title">Giầy golf</legend>
+                    <div class="form-group  row">
+                        <label class="control-label col-md-2">
+                            Size
+                        </label>
+                        <div class="col-md-4">
+                            @Html.ListBox("SizeId", (MultiSelectList)ViewBag.ddlSize, new { multiple = "multiple", @class = "form-control" })
+                        </div>
+                        <label class="control-label col-md-2">
+                            Width
+                        </label>
+                        <div class="col-md-4">
+                            @Html.ListBox("WidthId", (MultiSelectList)ViewBag.ddlWidth, new { multiple = "multiple", @class = "form-control" })
+                        </div>
+                    </div>
+                </fieldset>
+                @*Thuộc tính áo golf*@
+                <fieldset>
+                    <legend class="tile-title">Áo golf</legend>
+                    <div class="form-group  row">
+                        <label class="control-label col-md-2">
+                            Waist
+                        </label>
+                        <div class="col-md-4">
+                            @Html.ListBox("WaistId", (MultiSelectList)ViewBag.ddlWaist, new { multiple = "multiple", @class = "form-control" })
+                        </div>
+                        <label class="control-label col-md-2">
+                            Inseam
+                        </label>
+                        <div class="col-md-4">
+                            @Html.ListBox("InseamId", (MultiSelectList)ViewBag.ddlInseam, new { multiple = "multiple", @class = "form-control" })
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="form-group row">
+                    <label class="control-label col-md-2">
+                        Duyệt
+                    </label>
+                    <div class="col-md-4">
+                        @Html.CheckBox("DaDuyet", false, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+                <div class="form-group  row">
+                    <label class="control-label col-md-2">Ảnh sản phẩm</label>
+                    <div class="col-md-10">
+                        <input type="file" name="files" multiple="multiple" id="fUploads" class="form-control-file" onchange="preview_image();" />
+                        <div id="image_preview" style="width:100%; display:inline-block; padding-top:3px;"></div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="control-label col-md-2"></label>
+                    <div class="col-md-10" style="text-align:right;">
+                        <input type="submit" value="Thêm mới" class="btn btn-primary" />
+                    </div>
+                </div>
+
+            }
+
+                <div>
+                    @Html.ActionLink("Trở lại", "DanhSach")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

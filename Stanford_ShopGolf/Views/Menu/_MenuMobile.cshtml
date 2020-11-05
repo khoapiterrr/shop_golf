@@ -1,0 +1,90 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@model  IEnumerable<MenuViewModel>
+<div id="navbarMobile" class="mobile-menu is-hidden-desktop" role="navigation">
+    <div class="container">
+        <div class="d-flex flex-row justify-content-between align-items-center">
+            <div class="logo">
+                <a href="/home" title="Smart Gold">
+                    <img src="~/Media/Images/SmartGolf_Logo.PNG" class="primary-logo" />
+                </a>
+            </div>
+            <button class="btn btn-outline-warning is-hidden-desktop" type="button" data-toggle="collapse" data-target="#navbarMobile" aria-controls="navbarMobile" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fa fa-window-close"></i>
+            </button>
+        </div>
+        
+        <div class="mobile-menu-container">
+            <ul id="navbarMobile" class="main-menu level-1-menu-list abelFont navbar-toggler" role="menubar">
+                @foreach (var itemlv1 in Model)
+                {
+                    var hasSub = itemlv1.Children.Count > 0;
+                    var subMenuName = "submenu-" + itemlv1.Id.ToString();
+                    <li aria-haspopup="true" role="menuitem">
+                        <div class="d-flex justify-content-between flex-row">
+                            <a href="@itemlv1.Url" class="" has-sub-menu">@itemlv1.Name</a>
+                            @if (hasSub)
+                            {
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#@subMenuName" aria-controls="@subMenuName" aria-expanded="false">
+                                    <i class="fa fa-angle-right"></i>
+                                </button>
+                            }
+                        </div>
+                        @if (hasSub)
+                        {
+                            <div class="level-2 collapse" id="@subMenuName">
+                                <div class="level-2-content container">
+                                    <div class="level-2-first-block">
+                                        <div class="future-image">
+                                            <img src="@itemlv1.ImagePath" alt="" />
+                                        </div>
+                                        <div class="title">@itemlv1.HeadTitle</div>
+                                        <div class="sub-title">@itemlv1.Description</div>
+                                        <a href="@itemlv1.Url" class="btn btn-primary">Xem thêm</a>
+                                    </div>
+                                    <ul class="level-2-menu-list">
+                                        <li>
+                                            <button class="btn btn-link" data-toggle="collapse" data-target="#@subMenuName" aria-controls="@subMenuName" aria-expanded="true">
+                                                <i class="fa fa-angle-left"></i>
+                                            </button>
+                                        </li>
+                                        @foreach (var itemlv2 in itemlv1.Children)
+                                        {
+                                            var hasSub2 = itemlv2.Children.Count > 0;
+                                            var cls3 = hasSub2 == true ? "has-sub-menu" : string.Empty;
+                                            var subMenuNameLv2 = "submenu2-" + itemlv1.Id.ToString();
+                                            <li role="menuitem" class="@cls3">
+                                                <div class="d-flex flex-row justify-content-between">
+                                                    <a href="@itemlv2.Url">@itemlv2.Name</a>
+                                                    @if (hasSub2)
+                                                    {
+                                                        <button class="btn btn-link" data-toggle="collapse" data-target="#@subMenuNameLv2" aria-controls="@subMenuNameLv2" aria-expanded="false">
+                                                            <i class="fa fa-angle-right"></i>
+                                                        </button>
+                                                    }
+                                                </div>
+                                                @if (hasSub2)
+                                                {
+                                                    <ul class="level-3-menu-list collapse" id="@subMenuNameLv2">
+                                                        <li>
+                                                            <button class="btn btn-link" data-toggle="collapse" data-target="#@subMenuNameLv2" aria-controls="@subMenuNameLv2" aria-expanded="true">
+                                                                <i class="fa fa-angle-left"></i>
+                                                            </button>
+                                                        </li>
+                                                        @foreach (var itemlv3 in itemlv2.Children)
+                                                        {
+                                                            <li><a href="@itemlv3.Url">@itemlv3.Name</a></li>
+                                                        }
+                                                    </ul>
+                                                }
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        }
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

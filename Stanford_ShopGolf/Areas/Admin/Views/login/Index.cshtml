@@ -1,0 +1,193 @@
+﻿@{
+    ViewBag.Title = "Đăng nhập hệ thống";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Main CSS-->
+    <link href="~/Content/Admin/css/main.css" rel="stylesheet" />
+    <!-- Font-icon css-->
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Đăng nhập</title>
+    <style>
+        .modal-loading {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: rgba( 255, 255, 255, .8 ) url('../../Content/Admin/images/Layout/ajax-loader.gif') 50% 50% no-repeat;
+        }
+
+        /* When the body has the loading class, we turn
+        the scrollbar off with overflow:hidden */
+        body.loading .modal-loading {
+            overflow: hidden;
+        }
+
+        /* Anytime the body has the loading class, our
+        modal element will be visible */
+        body.loading .modal-loading {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="modal-loading"></div>
+    <section class="material-half-bg">
+        <div class="cover"></div>
+    </section>
+
+    <section class="login-content">
+        <div class="logo">
+            <h1>Quản lý Shop Golf</h1>
+        </div>
+        <div class="login-box">
+            <div class="login-form">
+                <h3 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>Đăng nhập</h3>
+                <div class="form-group">
+                    <label class="control-label">TÀI KHOẢN</label>
+                    <input class="form-control" id="txtUserName" type="text" placeholder="Tài khoản" autofocus>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">MẬT KHẨU</label>
+                    <input class="form-control" id="txtPwd" type="password" placeholder="Mật khẩu">
+                </div>
+                <div class="form-group">
+                    <div class="utility">
+                        <div class="animated-checkbox">
+                            <label>
+                                <input type="checkbox" id="rememberme" value="true"><span class="label-text">Nhớ mật khẩu</span>
+                            </label>
+                        </div>
+                        <p class="semibold-text mb-2"><a href="#" data-toggle="flip">Quên mật khẩu ?</a></p>
+                    </div>
+                </div>
+                <div class="form-group btn-container">
+                    <button class="btn btn-primary btn-block" onclick="DangNhap()"><i class="fa fa-sign-in fa-lg fa-fw"></i>Đăng nhập</button>
+                </div>
+            </div>
+
+            <form class="forget-form" action="index.html">
+                <h3 class="login-head"><i class="fa fa-lg fa-fw fa-lock"></i>Quên mật khẩu ?</h3>
+                <div class="form-group">
+                    <label class="control-label">TÀI KHOẢN</label>
+                    <input class="form-control" type="text" placeholder="Tài khoản">
+                </div>
+                <div class="form-group btn-container">
+                    <button class="btn btn-primary btn-block"><i class="fa fa-unlock fa-lg fa-fw"></i>RESET</button>
+                </div>
+                <div class="form-group mt-3">
+                    <p class="semibold-text mb-0"><a href="#" data-toggle="flip"><i class="fa fa-angle-left fa-fw"></i> Đăng nhập</a></p>
+                </div>
+            </form>
+        </div>
+    </section>
+    <!-- Essential javascripts for application to work-->
+    <script src="~/Content/Admin/js/jquery-3.2.1.min.js"></script>
+    <script src="~/Content/Admin/js/popper.min.js"></script>
+    <script src="~/Content/Admin/js/bootstrap.min.js"></script>
+    <script src="~/Content/Admin/js/main.js"></script>
+    <!-- The javascript plugin to display page loading on top-->
+    <script src="~/Content/Admin/js/plugins/pace.min.js"></script>
+    <script>
+        $body = $("body");
+
+        const loadingStart = () => $body.addClass("loading");
+        const loadingStop = () => $body.removeClass("loading");
+    </script>
+    <script type="text/javascript">
+        // Login Page Flipbox control
+        $('.login-content [data-toggle="flip"]').click(function () {
+            $('.login-box').toggleClass('flipped');
+            return false;
+        });</script>
+    <script>
+        $('#txtPwd').keyup(function (e) {
+            if (e.key == "Enter") {
+                DangNhap()
+            }
+        })
+        $('#txtUserName').keyup(function (e) {
+            if (e.key == "Enter") {
+                DangNhap()
+            }
+        })
+        $(function () {
+            $('#txtUserName').val('@ViewBag.UserLogin.username')
+            $('#txtPwd').val('@ViewBag.UserLogin.password')
+            if ('@ViewBag.UserLogin.username' !== '' && '@ViewBag.UserLogin.password' !== '') {
+                $( "#rememberme" ).prop( "checked", true );
+            }
+        })
+        function DangNhap() {
+            //validation
+
+            if ($('#txtUserName').val().trim() == '' || $('#txtPwd').val().trim() == '') {
+                $.notify({
+                    title: "",
+                    message: "Vui lòng nhập đầy đủ thông tin.",
+                    icon: 'fa fa-check'
+                }, {
+                        type: "danger"
+                    });
+                return;
+            }
+            let formData = new FormData();
+            formData.append('username', $('#txtUserName').val());
+            formData.append('pwd', $('#txtPwd').val());
+            //Kiểm tra nhớ mật khẩu
+            if ($('#rememberme').is(':checked')) {
+                formData.append('remember', 'true')
+            } else {
+                formData.append('remember','false')
+            }
+            loadingStart();
+            $.ajax({
+                url: '@Url.Action("CheckLogin", "login")',
+                data: formData,
+                type: 'POST',
+                success: function (data) {
+                    if (data.error) {
+                        $.notify({
+                            title: "Đăng nhập :",
+                            message: data.message,
+                            icon: 'fa fa-check'
+                        }, {
+                                type: "danger"
+                            });
+                        loadingStop();
+                    }
+                    else {
+                        //loadingStop();
+                        window.location.href = '@Url.Action("Index", "HomeAdmin")'
+                    }
+
+                },
+                error: function (error) {
+                    $.notify({
+                        title: "Có lỗi xảy ra : ",
+                        message: error,
+                        icon: 'fa fa-check'
+                    }, {
+                            type: (data.isSuccess? "success":"danger")
+                        });
+                },
+                cache: false,
+                processData: false,
+                contentType: false
+            });
+
+        }
+    </script>
+    <!-- Page specific javascripts-->
+    <script type="text/javascript" src="~/Content/Admin/js/plugins/bootstrap-notify.min.js"></script>
+    <script type="text/javascript" src="~/Content/Admin/js/plugins/sweetalert.min.js"></script>
+</body>
+</html>

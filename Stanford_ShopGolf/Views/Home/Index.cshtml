@@ -1,0 +1,10 @@
+﻿@using Stanford.ShopGolf.Business.Entity
+@model List<Slider>
+@section SPAViews {
+    @Html.Partial("_Home", Model)
+}
+@section Scripts
+{
+    @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/hero-slider")
+}

@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section SPAViews {
+
+}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Giới thiệu</li>
+        </ol>
+    </nav>
+</div>
+
+<div class="container">
+    <img  src="~/Content/Images/about-us-header-banner.png" style="max-width:100%; max-height:435px;" />
+    <div class="row">
+        <div class="col-12 col-lg-12 col-sm-12 col-md-12">
+            @Html.Raw(ViewBag.GioiThieu)
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+}
+
+

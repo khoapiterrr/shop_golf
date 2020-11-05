@@ -1,0 +1,23 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@model IEnumerable<ProductViewModel>
+@{
+    var totalProducts = Model.Count();
+
+}
+@*@Html.Partial("Product.List.Filter", Model)*@
+@Html.Partial("Product.List.Refinement")
+<div class="search-result-content">
+    <div id="loadMoreProductContent" class="search-result-items tiles-container row">
+
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-4 col-sm-6 col-md-4 col-12">
+                @Html.Partial("Product.List.Item", item)
+            </div>
+        }
+    </div>
+    <div class="load-more-pane">
+        <input type="hidden" name="pageNumber" value="1" id="txtPageHidden" />
+        <a class="btn btn-outline-primary btn-lg btn-circle" href="#" id="btnLoadMore">Xem thêm</a>
+    </div>
+</div>

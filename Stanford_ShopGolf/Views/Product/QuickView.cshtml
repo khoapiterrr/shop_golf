@@ -1,0 +1,110 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@model ProductViewModel
+<div class="product-detail">
+    <div class="row">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6 product-images-container">
+            @Html.Partial("Product.Detail.Images", Model.Images)
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6 product-info-container">
+            <div class="product-brand">
+                @Html.Partial("Product.Detail.Brand", Model.Brand)
+                @Html.Partial("Product.Detail.Title", Model)
+                @Html.Partial("Product.Detail.ProductCode", Model)
+                @Html.Partial("Product.Detail.Review", Model.Reviews)
+                <div class="product-variations">
+                    @Html.Partial("Product.Detail.SpecialAttribute", Model.SanPhamEntity)
+                    @Html.Partial("Product.Detail.Quantity", Model)
+                    @Html.Partial("Product.Detail.Action", Model)
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        $(".round-click").click(function () {
+
+            $("#" + $(this).closest("ul").attr("id") + " li").each(function (){  $(this).removeClass("selected") })
+
+            $(this).closest("li").addClass("selected");
+        })
+
+        SelectAllFirst()
+    })
+    function SelectAllFirst() {
+        let ulcolor = $('#ul_color');
+        let ulwaist = $('#ul_waist');
+        let ulinseam = $('#ul_inseam');
+        let ulsize = $('#ul_size');
+        if (ulcolor) {
+            $("#ul_color li").first().addClass("selected");
+        }
+        if (ulwaist) {
+            $("#ul_waist li").first().addClass("selected");
+        }
+        if (ulinseam) {
+            $("#ul_inseam li").first().addClass("selected");
+        }
+        if (ulsize) {
+            $("#ul_size li").first().addClass("selected");
+        }
+    }
+    function SubmitSP() {
+        let color;
+        let waist;
+        let inseam;
+        let size;
+        $("#ul_color li").each(function () {
+            if ($(this).hasClass("selected")) {
+                color = this.id;
+            }
+
+        });
+        $("#ul_waist li").each(function () {
+             if ($(this).hasClass("selected")) {
+                 waist = this.id;
+            }
+        });
+        $("#ul_inseam li").each(function () {
+             if ($(this).hasClass("selected")) {
+                 inseam = this.id;
+            }
+        });
+        $("#ul_size li").each(function () {
+             if ($(this).hasClass("selected")) {
+                 size = this.id;
+            }
+        });
+        let _data = {
+            SanPhamId : @Model.Id,
+            LengthSizeId: $('#ddlLengthSize').val(),
+            ShaftId: $('#ddlshaft').val(),
+            WidthId: $('#ddlwidth').val(),
+            LoftId: $('#ddlLoft').val(),
+            BounceId: $('#ddlBounce').val(),
+            FlexId: $('#ddlFlex').val(),
+            GenderId: $('#ddlGender').val(),
+            SizeId: size,
+            InseamId: inseam,
+            WaistId: waist,
+            ColorId: color,
+            SoLuong: $("#Quantity").val()
+            };
+        console.log(_data);
+         $.ajax({
+                url: '@Html.Raw(Url.Action("InsertToGioHang","Product"))',
+                data:  _data,
+                type: 'POST',
+                success: function (data) {
+                    alert("thành công");
+                    CountGioHang();
+                },
+                error: function (error) {
+                    alert("có lỗi xảy ra");
+                }
+
+            });
+        }
+</script>

@@ -1,0 +1,10 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@model ProductViewModel
+<div class="product-image">
+    <img width="260" height="286" src="@Model.FutureImagePath" alt="@Model.Title" title="@Model.Title" />
+    @if (Model.ShowSaleOff)
+    {
+        @Html.Partial("Product.List.Item.SaleOff", Model.Price)
+    }
+    <a class="btn btn-link btn-quickview" href="/product/quickview/@Model.Id">Xem nhanh</a>
+</div>

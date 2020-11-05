@@ -1,0 +1,54 @@
+﻿@model Stanford.ShopGolf.Business.Entity.KhachHang
+<div class="row">
+    <div class="col-lg-6">
+        <div class="form-group">
+            <label for="MaKH">Mã khách hàng</label><span style="color:red"> (*)</span>
+            @Html.EditorFor(model => model.MaKH, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.MaKH, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <label for="TenKH">Tên khách hàng</label><span style="color:red"> (*)</span>
+            @Html.EditorFor(model => model.TenKH, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.TenKH, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <label for="DienThoai">Điện thoại</label>
+            @Html.EditorFor(model => model.DienThoai, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.DienThoai, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <label for="DiaChi">Địa chỉ </label>
+            @Html.EditorFor(model => model.DiaChi, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.DiaChi, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <label for="Email">Địa chỉ Email</label><span style="color:red"> (*)</span>
+
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="col-lg-4 offset-lg-1">
+        <div class="form-group">
+            <label for="MaSoThue">Mã số thuê</label>
+            @Html.EditorFor(model => model.MaSoThue, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.MaSoThue, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <label for="MaSoCongDan">Mã số công dân</label>
+
+            @Html.EditorFor(model => model.MaSoCongDan, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.MaSoCongDan, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <label for="Email">Tỉnh thành</label>
+            @Html.DropDownListFor(p => p.TinhThanhId, (List<SelectListItem>)ViewBag.ddlTinhThanh, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.TinhThanhId, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <label for="Email">Loại khách hàng</label>
+            @Html.DropDownListFor(p => p.LoaiId, (List<SelectListItem>)ViewBag.ddlLoaiKH, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.LoaiId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+</div>

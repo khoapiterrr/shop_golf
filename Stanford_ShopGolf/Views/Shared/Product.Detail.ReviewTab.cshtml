@@ -1,0 +1,231 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@using Stanford.ShopGolf.Business
+@model ProductViewModel
+
+<div class="product-block tab-dg" id="tab-dg">
+    <h3 class="title">Đánh giá</h3>
+    <div class="row">
+        <div class="col-4 rate-global">
+            <span class="rating-value">@(Model.SanPhamEntity.Review.HasValue? Convert.ToDecimal( Model.SanPhamEntity.Review).ToString("##.#"):"5")/5</span>
+            <div class="rate-display" data-value="@(Model.SanPhamEntity.Review??5)"></div>
+            <span class="total-rate">(@Model.Reviews.TotalReview đánh giá)</span>
+        </div>
+        <div class="col-8 rating-detail">
+            <ul class="rating-list">
+                <li class="row no-gutters">
+                    <div class="col-2 text-right">5<i class="fa fa-star"></i></div>
+                    <div class="progress col-8">
+                        <div class="progress-bar" style="width: @Model.Reviews.Percent5%"></div>
+                    </div>
+                    <div class="col-2">@(Model.Reviews.Percent5>0?Convert.ToDecimal(Model.Reviews.Percent5).ToString("##"):"0")%</div>
+                </li>
+                <li class="row no-gutters">
+                    <div class="col-2 text-right">4<i class="fa fa-star"></i></div>
+                    <div class="progress col-8">
+                        <div class="progress-bar" style="width: @Model.Reviews.Percent4%"></div>
+                    </div>
+                    <div class="col-2">@(Model.Reviews.Percent4>0?Convert.ToDecimal( Model.Reviews.Percent4).ToString("##"):"0")%</div>
+                </li>
+                <li class="row no-gutters">
+                    <div class="col-2 text-right">3<i class="fa fa-star"></i></div>
+                    <div class="progress col-8">
+                        <div class="progress-bar" style="width: @Model.Reviews.Percent3%"></div>
+                    </div>
+                    <div class="col-2">@(Model.Reviews.Percent3>0?Convert.ToDecimal(Model.Reviews.Percent3).ToString("##"):"0")%</div>
+                </li>
+                <li class="row no-gutters">
+                    <div class="col-2 text-right">2<i class="fa fa-star"></i></div>
+                    <div class="progress col-8">
+                        <div class="progress-bar" style="width: @Model.Reviews.Percent2%"></div>
+                    </div>
+                    <div class="col-2">@(Model.Reviews.Percent2>0?Convert.ToDecimal(Model.Reviews.Percent2).ToString("##"):"0")%</div>
+                </li>
+                <li class="row no-gutters">
+                    <div class="col-2 text-right">1<i class="fa fa-star"></i></div>
+                    <div class="progress col-8">
+                        <div class="progress-bar" style="width: @Model.Reviews.Percent1%"></div>
+                    </div>
+                    <div class="col-2">@(Model.Reviews.Percent1>0?Convert.ToDecimal(Model.Reviews.Percent1).ToString("##"):"0")%</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <hr />
+    <h4>Đánh giá sản phẩm</h4>
+    <form action="/Product/WriteReview" method="POST">
+        <div id="input-rate" class="mb-2"></div>
+        <input type="hidden" name="rateValue" id="inputRateValue" />
+        <input type="text" class="form-control mb-2" placeholder="Nhập tiêu đề nhận xét(không bắt buộc)"
+               name="txtTitleComment" />
+        <textarea class="form-control mb-2" placeholder="Nhận xét của bạn về sản phẩm này"
+                  name="txtContentComment" rows="5"></textarea>
+        <input type="hidden" name="idSP" value="@Model.Id" />
+        <div class="text-right mb-2">
+            <button class=" btn btn-lg btn-warning">Gửi nhận xét</button>
+        </div>
+    </form>
+    <hr />
+    <div id="tab-bl" class="bl-container">
+        <div class="product-comment-list">
+            <!-- Comment đều tiên -->
+            @foreach (var myreivew in Model.Top5Review)
+            {
+                <div class="comment-ask">
+                    <div class="comment-info">
+                        <div class="uc-info row">
+                            <i class="fa fa-user"></i>
+                            <span class="uc-name">@(myreivew.NguoiDungId > 0 ? (DataProvider.Entities.NguoiDungs.Find(myreivew.NguoiDungId)).HoTen : "")</span>
+                            <span class="uc-role uc-manager">Admin</span>
+                            <div class="rate-display" data-value="@myreivew.ReviewCount"></div>
+                            
+                        </div>
+                        <div class="uc-info">
+                            <span class="uc-name">@myreivew.TieuDe</span>
+                        </div>
+                        <div class="comment-content">
+                            <span class="rate-star rate-star-3"></span>@myreivew.NoiDung
+                        </div>
+                        <div class="comment-action">
+                            @*<a href="javascript:void(0)" onclick="startReplyFor(this, 0)">
+                                Thảo luận
+                            </a>*@
+                            @*<a href="#"><i class="fa fa-thumbs-up"></i>Hài lòng</a>*@
+                            <span>@((DateTime.Now.Date-myreivew.NgayTao.Value.Date).Days) ngày trước</span>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+            }
+
+            @if (Model.Reviews.TotalReview>5)
+            {
+                <div class="col-lg-4 col-sm-6 col-md-4 col-12" style="margin:0 auto; text-align:center">
+                    <a class="btn btn-outline-primary btn-lg btn-circle" href="javascript:void(0)">Xem thêm</a>
+                </div>
+            }
+
+            <!-- Comment thứ 2 -->
+            @*
+                         <div class="comment-ask">
+                        <div class="comment-info">
+                            <div class="uc-info">
+                                <i class="fa fa-user"></i>
+                                <span class="uc-name">Lại Đức Thuần</span>
+                                <span class="uc-role">Đã mua hàng</span>
+                            </div>
+                            <div class="comment-content">
+                                <span class="rate-star rate-star-3"></span>Máy ok ngon. Với giá này thì sở
+                                hữu
+                                chiếc máy như vậy cũng ok.
+                            </div>
+                            <div class="comment-action">
+                                <a href="javascript:void(0)" onclick="startReplyFor(this, 0)">
+                                    Thảo luận
+                                </a>
+                                <a href="#"><i class="fa fa-thumbs-up"></i>Hài lòng</a>
+                                <span>6 ngày trước</span>
+                            </div>
+                        </div>
+                        <div class="comment-reply">
+                            <div class="comment-ask">
+                                <div class="comment-info">
+                                    <div class="uc-info">
+                                        <i class="fa fa-user"></i>
+                                        <span class="uc-name">Hà Duy Sơn</span>
+                                        <span class="uc-role uc-manager">Quản trị viên</span>
+                                    </div>
+                                    <div class="comment-content">
+                                        Cảm ơn ý kiến phản hồi của anh đẹp trai
+                                    </div>
+                                    <div class="comment-action">
+                                        <a href="javascript:void(0)" onclick="startReplyFor(this, 0)">
+                                            Thảo luận
+                                        </a>
+                                        <a href="#"><i class="fa fa-thumbs-up"></i>Thích</a>
+                                        <span>6 ngày trước</span>
+                                    </div>
+                                </div>
+                                <div class="comment-reply">
+                                    <div class="comment-ask">
+                                        <div class="comment-info">
+                                            <div class="uc-info">
+                                                <i class="fa fa-user"></i>
+                                                <span class="uc-name">Hà Duy Sơn</span>
+                                                <span class="uc-role uc-manager">Quản trị viên</span>
+                                            </div>
+                                            <div class="comment-content">
+                                                Cảm ơn ý kiến phản hồi của anh đẹp trai
+                                            </div>
+                                            <div class="comment-action">
+                                                <a href="javascript:void(0)"
+                                                   onclick="startReplyFor(this, 0)">
+                                                    Thảo luận
+                                                </a>
+                                                <a href="#"><i class="fa fa-thumbs-up"></i>Thích</a>
+                                                <span>6 ngày trước</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="comment-reply">
+                            <div class="comment-ask">
+                                <div class="comment-info">
+                                    <div class="uc-info">
+                                        <i class="fa fa-user"></i>
+                                        <span class="uc-name">Lại Đức Thuần</span>
+                                        <span class="uc-role uc-manager">Thượng đế</span>
+                                    </div>
+                                    <div class="comment-content">
+                                        Ừ, cảm ơn. Chú quá khen
+                                    </div>
+                                    <div class="comment-action">
+                                        <a href="javascript:void(0)" onclick="startReplyFor(this, 0)">
+                                            Thảo luận
+                                        </a>
+                                        <a href="#"><i class="fa fa-thumbs-up"></i>Thích</a>
+                                        <span>6 ngày trước</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="comment-ask">
+                    <div class="comment-info">
+                        <div class="uc-info">
+                            <i class="fa fa-user"></i>
+                            <span class="uc-name">Lại Đức Thuần</span>
+                            <span class="uc-role uc-manager">Thượng đế</span>
+                        </div>
+                        <div class="comment-content">
+                            Thất vọng quá. Hàng chất lượng quá tệ. <b>Miễn phí</b> thì còn
+                            dùng tạm
+                        </div>
+                        <div class="comment-action">
+                            <a href="javascript:void(0)" onclick="startReplyFor(this, 0)">
+                                Thảo luận
+                            </a>
+                            <a href="#"><i class="fa fa-thumbs-up"></i>Thích</a>
+                            <span>6 ngày trước</span>
+                        </div>
+                    </div>
+                </div>*@
+        </div>
+
+
+        @*<nav aria-label="Page navigation example" class="border-top mt-3">
+                <ul class="pagination mt-3 justify-content-center">
+                    <li class="page-item disabled"><a class="page-link" href="#">«</a></li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">4</a></li>
+                    <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                    <li class="page-item"><a class="page-link" href="#">14</a></li>
+                    <li class="page-item disabled"><a class="page-link" href="#">»</a></li>
+                </ul>
+            </nav>*@
+    </div>
+</div>

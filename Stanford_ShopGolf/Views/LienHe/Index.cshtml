@@ -1,0 +1,52 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section SPAViews {
+
+}
+<div class="container checkout-container">
+    <div class="row">
+        <div class="col-12v col-md-8 col-lg-8 col-sm-12 col-xs-12">
+            <div class="guest-member-msg">
+                Bạn có thể gửi thông tin cho chúng tôi theo thông tin dưới đây
+            </div>
+
+            @Html.Partial("_LienHeForm")
+        </div>
+        <div class="col-12v col-md-4 col-lg-4 col-sm-12 col-xs-12 order-review-container">
+            <h5 class="title"><i class="fa fa-info"></i> Thông tin công ty</h5>
+            <table class="order-review-total">
+                <tbody>
+                    <tr>
+                        <td colspan="2">Công ty Cổ phần Smart Golf Việt Nam</td>
+                    </tr>
+                    <tr>
+                        <td>Địa chỉ:</td>
+                        <td>Số 20 ngõ 678 Đường Láng, P. Láng Thượng, Đống Đa, Hà Nội</td>
+                    </tr>
+                </tbody>
+                <tr>
+                    <td>Email:</td>
+                    <td>support@smartgolf.com</td>
+                </tr>
+                <tr>
+                    <td>Website:</td>
+                    <td><a href="#">smartgolf.com</a></td>
+                </tr>
+                <tfoot>
+                    <tr>
+                        <td>Hotline:</td>
+                        <td>0869 188 255</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<div  style="clear:both;"></div>
+@section Scripts
+{
+
+}

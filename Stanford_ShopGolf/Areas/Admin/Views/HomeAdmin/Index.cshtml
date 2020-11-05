@@ -1,0 +1,116 @@
+﻿@model IEnumerable<Stanford.ShopGolf.Business.Entity.NguoiDung>
+@{
+    ViewBag.Title = "Hệ thống quản lý Shop Golf";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    .info a
+    {
+        color:white;
+    }
+</style>
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-th-list"></i> Trang chủ</h1>
+        <p>Hệ thống quản lý Shop Golf</p>
+    </div>
+    <ul class="app-breadcrumb breadcrumb side">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">Quản lý Shop Golf</li>
+        <li class="breadcrumb-item active"><a href="#">Chức năng</a></li>
+    </ul>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <div class="widget-small danger">
+            <i class="icon fa fa-cart-plus fa-3x"></i>
+            <div class="info">
+                <h4><a href='@Url.Action("DanhSach","SanPham")'>Sản phẩm</a></h4>
+                <p><b>@ViewBag.SoLuongHang</b></p>
+            </div>
+        </div>
+       
+    </div>
+    <div class="col-md-3">
+        <div class="widget-small info">
+            <i class="icon fa fa-star fa-3x"></i>
+            <div class="info">
+                <h4><a href='@Url.Action("QLBrand","Brand")'>Thương hiệu</a></h4>
+                <p><b>@ViewBag.SoLuongThuongHieu</b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="widget-small warning">
+            <i class="icon fa fa-calculator fa-3x"></i>
+            <div class="info">
+                <h4><a href='@Url.Action("Index","HoaDonBan")'>Hóa đơn</a></h4>
+                <p><b>@ViewBag.SoHoaDon</b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="widget-small danger">
+            <i class="icon fa fa-address-book fa-3x"></i>
+            <div class="info">
+                <h4><a href='@Url.Action("Index","Depot")'>Khách hàng</a></h4>
+                <p><b>@ViewBag.SoKhachHang</b></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <div class="widget-small primary">
+            <i class="icon fa fa-users fa-3x"></i>
+            <div class="info">
+                <h4><a href='@Url.Action("Index","NguoiDung")'>Người dùng</a></h4>
+                <p><b>@ViewBag.SoNguoiDung</b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="widget-small warning">
+            <i class="icon fa fa-history fa-3x"></i>
+            <div class="info">
+                <h4><a href='@Url.Action("Index","NhatKi")'>Nhật ký hệ thống</a></h4>
+                <p><b><a href='@Url.Action("Index","NhatKi")'>Xem chi tiết</a></b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="widget-small info">
+            <i class="icon fa fa-list fa-3x"></i>
+            <div class="info">
+                <h4><a href='@Url.Action("Index","MenuAdmin")'>Menu</a></h4>
+                <p><b><a href='@Url.Action("Index","MenuAdmin")'>Xem chi tiết</a></b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="widget-small primary">
+            <i class="icon fa fa-camera fa-3x"></i>
+            <div class="info">
+                <h4><a href='@Url.Action("Index","Slider")'>Slider</a></h4>
+                <p><b><a href='@Url.Action("Index","Slider")'>Xem chi tiết</a></b></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="loadtable">
+
+</div>
+<script src="~/Content/Libs/js/hethong.js"></script>
+<script>
+    //$(function () {
+     //   LoadAjaxContent('@Url.Action("table","HomeAdmin")', "#loadtable")
+    //    let timeLoad = setInterval(function () {
+      //      LoadAjaxContent('@Url.Action("table","HomeAdmin")', "#loadtable")
+   //     }, 30000)
+   // })
+
+    $(document).ready(function () {
+        //$("body").addClass("app sidebar-mini rtl  sidenav-toggled  pace-done");
+    });
+</script>

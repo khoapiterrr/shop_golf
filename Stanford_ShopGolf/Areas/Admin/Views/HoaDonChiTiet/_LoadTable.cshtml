@@ -1,0 +1,168 @@
+﻿@model IEnumerable<Stanford.ShopGolf.Business.Entity.HoaDonChiTiet>
+@using Stanford_ShopGolf.Areas.Admin.Models
+@using Stanford_ShopGolf.Areas.Admin.CommonAdmin
+
+@{
+    Layout = null;
+    //Xử lý kiểm tra quyền sử dụng
+    KiemTraQuyenChucNang.Instance.CheckPermission(ConstantData.ChucNangPhanMem.QuanLyVaiTro);
+    bool isEdit = KiemTraQuyenChucNang.Instance.isSua;
+    bool isDelete = KiemTraQuyenChucNang.Instance.isXoa;
+}
+@if (Model.Count() > 0)
+{
+    var first = Model.First().HoaDonBan;
+
+    <div class="card" style="width:100%; padding:15px; margin:15px">
+        <div class="row">
+            <div class="col-md-2">Khách hàng</div>
+            <div class="col-md-4">@(first.KhachHangId > 0 ? first.KhachHang.TenKH : "")</div>
+            <div class="col-md-6 text-xl-right">
+                @if (first.DaThanhToan ?? false)
+                {
+                    <span class="badge badge-success badge-pill">Đã thanh toán</span>
+                }
+                else
+                {
+                    <span class="badge badge-danger badge-pill">Chưa thanh toán</span>
+                }
+            </div>
+            <div class="col-md-2">Tổng tiền</div>
+            <div class="col-md-4">@(Convert.ToDecimal(first.TongTien).ToString("###,###.##")) đ</div>
+            <div class="col-md-2">Ngày tạo</div>
+            <div class="col-md-4">@(first.NgayTao.HasValue ? first.NgayTao.Value.ToString("dd/MM/yyyy") : "") </div>
+            <div class="col-md-2">Mô tả</div>
+            <div class="col-md-4">@(first.MoTa) </div>
+        </div>
+    </div>
+}
+<div class="table-responsive">
+    <table class="table table-hover table-bordered" id="HoaDonChiTietTable">
+        <thead class="text-md-center">
+            <tr>
+                <th>
+                    Sản phẩm
+                </th>
+
+
+
+
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @if (item.SanPhamId > 0 ? (item.SanPham.LoaiId > 0 ? item.SanPham.LoaiSanPham.Id == 6 : false) : false) //áo
+                        {
+
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div>Tên sản phẩm: @(item.SanPhamId > 0 ? item.SanPham.TenSanPham : "")</div>
+                                    <div>Số lượng: @Html.DisplayFor(modelItem => item.SoLuong)</div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div>Cỡ eo: @(item.WaistId > 0 ? Stanford.ShopGolf.Business.DataProvider.Entities.Waists.Find(item.WaistId).WaistName : "")</div>
+                                    <div>Đường may:  @(item.InseamId > 0 ? Stanford.ShopGolf.Business.DataProvider.Entities.Inseams.Find(item.InseamId).InseamName : "")</div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div>Phần trăm giảm: @Html.DisplayFor(modelItem => item.PhanTramGiam) %</div>
+                                    <div>Tiền giảm: @Convert.ToDecimal(item.GiaGiam).ToString("###,###.###") đ</div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div>Giá bán: @Convert.ToDecimal(item.GiaBan).ToString("###,###.###") đ</div>
+                                    <div>Màu sắc: @(item.ColorId > 0 ? Stanford.ShopGolf.Business.DataProvider.Entities.Colors.Find(item.ColorId).ColorName : "")</div>
+                                </div>
+                            </div>
+
+                        }
+                        else if (item.SanPhamId > 0 ? (item.SanPham.LoaiId > 0 ? item.SanPham.LoaiSanPham.Id == 5 : false) : false) //gậy
+                        {
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div>Tên sản phẩm: @(item.SanPhamId > 0 ? item.SanPham.TenSanPham : "")</div>
+                                    <div>Số lượng: @Html.DisplayFor(modelItem => item.SoLuong)</div>
+                                    <div>Flex:  @(item.FlexId > 0 ? Stanford.ShopGolf.Business.DataProvider.Entities.Flexes.Find(item.FlexId).FlexName : "")</div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div>Shaft: @(item.ShaftId > 0 ? Stanford.ShopGolf.Business.DataProvider.Entities.Shafts.Find(item.ShaftId).ShaftName : "")</div>
+
+
+                                </div>
+                                <div class="col-md-3">
+                                    <div>Phần trăm giảm: @Html.DisplayFor(modelItem => item.PhanTramGiam) %</div>
+                                    <div>Tiền giảm: @Convert.ToDecimal(item.GiaGiam).ToString("###,###.###") đ</div>
+
+                                </div>
+                                <div class="col-md-3">
+                                    <div>Giá bán: @Convert.ToDecimal(item.GiaBan).ToString("###,###.###") đ</div>
+                                    <div>Legth Size:  @(item.LengthSizeId > 0 ? Stanford.ShopGolf.Business.DataProvider.Entities.LengthSizes.Find(item.LengthSizeId).LengthSize1 : "")</div>
+                                </div>
+                            </div>
+
+                        }
+                        else if (item.SanPhamId > 0 ? (item.SanPham.LoaiId > 0 ? item.SanPham.LoaiSanPham.Id == 7 : false) : false) //giày
+                        {
+
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div>Tên sản phẩm: @(item.SanPhamId > 0 ? item.SanPham.TenSanPham : "")</div>
+                                    <div>Số lượng: @Html.DisplayFor(modelItem => item.SoLuong)</div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div>Độ rộng:  @(item.WidthId > 0 ? Stanford.ShopGolf.Business.DataProvider.Entities.Widths.Find(item.WidthId).WidthName : "")</div>
+                                    <div>Cỡ:  @(item.SizeId > 0 ? Stanford.ShopGolf.Business.DataProvider.Entities.Sizes.Find(item.SizeId).SizeName : "")</div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div>Phần trăm giảm: @Html.DisplayFor(modelItem => item.PhanTramGiam) %</div>
+                                    <div>Tiền giảm: @Convert.ToDecimal(item.GiaGiam).ToString("###,###.###") đ</div>
+
+                                </div>
+                                <div class="col-md-3">
+                                    <div>Giá bán: @Convert.ToDecimal(item.GiaBan).ToString("###,###.###") đ</div>
+                                    <div>Màu sắc: @(item.ColorId > 0 ? Stanford.ShopGolf.Business.DataProvider.Entities.Colors.Find(item.ColorId).ColorName : "")</div>
+
+                                </div>
+                            </div>
+
+                        }
+                        else
+                        {
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div>Tên sản phẩm: @(item.SanPhamId > 0 ? item.SanPham.TenSanPham : "")</div>
+                                    <div>Số lượng: @Html.DisplayFor(modelItem => item.SoLuong)</div>
+                                </div>
+                                <div class="col-md-2">
+
+                                </div>
+                                <div class="col-md-3">
+                                    <div>Phần trăm giảm: @Html.DisplayFor(modelItem => item.PhanTramGiam) %</div>
+                                    <div>Tiền giảm: @Convert.ToDecimal(item.GiaGiam).ToString("###,###.###") đ</div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div>Giá bán: @Convert.ToDecimal(item.GiaBan).ToString("###,###.###") đ</div>
+
+                                </div>
+                            </div>
+                        }
+
+
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<!-- Data table plugin-->
+<script type="text/javascript">$('#HoaDonChiTietTable').DataTable();</script>
+
+
+
+

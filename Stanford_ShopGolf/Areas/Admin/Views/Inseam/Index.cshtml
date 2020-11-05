@@ -1,0 +1,237 @@
+﻿@{
+    ViewBag.Title = "Quản lý đường may";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+@using Stanford_ShopGolf.Areas.Admin.Models
+@using Stanford_ShopGolf.Areas.Admin.CommonAdmin
+@*Xử lý kiểm tra quyền*@
+@{
+    KiemTraQuyenChucNang.Instance.CheckPermission(ConstantData.ChucNangPhanMem.QuanLyVaiTro);
+    bool isAdd = KiemTraQuyenChucNang.Instance.isThem;
+}
+
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-th-list"></i> Quản lý đường may</h1>
+    </div>
+    <ul class="app-breadcrumb breadcrumb side">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">Shop Golf</li>
+        <li class="breadcrumb-item active"><a href="#">Đường may</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-title">
+                <div class="row">
+                    <strong class="col-9 ">Danh sách đường may</strong>
+                    @if (isAdd)
+                    {
+                        <div class="col-3" style="text-align:right;">
+                            <span class="btn btn-primary" onclick="Add()">Thêm mới</span>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="tile-body">
+                <div id="loadttable">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*Modals thêm mới*@
+<div class="modal fade" id="ModalInseam" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mediumModalLabel">Medium Modal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="tile-body" id="tile-body">
+                    <div class="form-group row">
+                        <input type="hidden" id="isInsert" />
+                        <label class="control-label col-md-3">Tên đường may <span style="color:red">(*)</span></label>
+                        <div class="col-md-9">
+                            <input class="form-control" type="text" id="txtInseamName" placeholder="Nhập tên đường may">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">Số thứ tự </label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" id="txtOrderNumber" rows="4" placeholder="Nhập số thứ tự">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnSave" onclick="save()">Confirm</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*End Modal thêm mới*@
+<script>
+    //Hàm load bảng
+    const LoadTable = () => LoadAjaxContent('@Url.Action("_LoadTable","Inseam")', "#loadttable")
+
+    $(function () {
+        LoadTable()
+    })
+
+    function save() {
+        validate()
+        if (FormModalIsValid) {
+
+            let _data = {
+                Id:$('#isInsert').val(),
+                InseamName: $('#txtInseamName').val(),
+                OrderNumber: $('#txtOrderNumber').val()
+            }
+            let url='';
+            if (_data.Id > 0) {
+                url = '@Url.Action("Edit","Inseam")';
+            }
+            else {
+                url = '@Url.Action("Add","Inseam")';
+            }
+            console.log(_data);
+            $.ajax({
+                url: url,
+                data:  _data,
+                type: 'POST',
+                success: function (data) {
+                    if (data.Success) {
+
+                        $("#ModalInseam").modal("hide")
+                        LoadTable()
+                        $.notify({
+                            title: "Hoàn thành thao tác :",
+                            message: data.Message,
+                            icon: 'fa fa-check'
+                        }, {
+                                type: "success"
+                        });
+                    }
+                    else {
+                        $('#tile-body').nextAll(".spanError").remove();
+                        $('#tile-body').after('<div class="alert alert-dismissible alert-danger spanError">'+data.Message+'</div>')
+                    }
+                },
+                error: function (error) {
+                    $.notify({
+                        title: "Có lỗi xảy ra : ",
+                        message: error,
+                        icon: 'fa fa-check'
+                    }, {
+                            type: (error.Success? "success":"danger")
+                        });
+                }
+
+            });
+        }
+    }
+    function Add() {
+        //làm mới input
+        $('#txtInseamName').val('');
+        $('#txtOrderNumber').val('');
+        $('#isInsert').val('0');
+        //Xóa lỗi
+        ClearError('#txtInseamName');
+        ClearError('#txtOrderNumber');
+        $('#tile-body').nextAll(".spanError").remove();
+        $('#mediumModalLabel').html('Thêm mới đường may');
+        $('#btnSave').html('Thêm mới');
+        $("#ModalInseam").modal({ backdrop: "static" });
+    }
+    function Edit(id) {
+        $('#isInsert').val(id);
+        ClearError('#txtInseamName');
+        ClearError('#txtOrderNumber');
+        $('#tile-body').nextAll(".spanError").remove();
+
+        $.ajax({
+            url: '@Url.Action("GetObjToEdit","Inseam")'+'?id='+id,
+            type: 'GET',
+            data:'',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function (data) {
+                if (data != null) {
+                    $('#btnSave').html('Cập nhật');
+                    $('#txtInseamName').val(data.Data.InseamName)
+                    $('#txtOrderNumber').val(data.Data.OrderNumber)
+
+                    $('#mediumModalLabel').html('Chỉnh sửa đường may')
+
+                    //hiện modal
+                    $("#ModalInseam").modal({ backdrop: "static" })
+                }
+                else {
+                    debugger
+                    swal("Có lỗi", data.Message, "error");
+                }
+            },
+            error: function (result, textStatus, errorThrown) {
+                debugger
+                swal("Có lỗi", "Error:" + errorThrown + " - " + textStatus + " - " + result, "error");
+            },
+            cache: false,
+            processData: false,
+            contentType: false
+        });
+
+    }
+    function validate() {
+        FormModalIsValid = true
+        ValidateRequireControl('#txtInseamName', 'Bạn phải nhập tên đường may')
+    }
+
+    function Delete(id) {
+        swal({
+            title: "Bạn có chắc muốn xóa?",
+            text: "Bạn sẽ không thể phục hồi lại đường may này!",
+            showCancelButton: true,
+            confirmButtonText: "Đồng ý",
+            cancelButtonText: "Hủy bỏ",
+            closeOnConfirm: false,
+            closeOnCancel: true
+        }, function (isConfirm) {
+                if (isConfirm) {
+
+                $.ajax({
+                    url: '@Url.Action("Delete","Inseam")'+'?id='+id,
+                    type: 'Get',
+                    success: function (data) {
+                        console.log(data);
+                        if (data.Success) {
+                            swal("Đã xóa!", data.Message, "success");
+                            LoadTable()
+                        }
+                        else {
+                            swal("Có lỗi", data.Message,"error");
+                        }
+                    },
+                    error: function (error) {
+                        swal("Có lỗi", error, "error");
+                        //console.log("lôi "+data);
+                    },
+                    cache: false,
+                    processData: false,
+                    contentType: false
+                });
+
+                }
+        });
+    }
+
+
+
+</script>

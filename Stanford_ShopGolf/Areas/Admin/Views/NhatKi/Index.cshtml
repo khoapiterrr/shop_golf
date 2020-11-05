@@ -1,0 +1,146 @@
+﻿@{
+    ViewBag.Title = "Quản lý nhật kí hệ thống";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@using Stanford_ShopGolf.Areas.Admin.Models
+@using Stanford_ShopGolf.Areas.Admin.CommonAdmin
+@*Xử lý kiểm tra quyền*@
+@{
+    KiemTraQuyenChucNang.Instance.CheckPermission(ConstantData.ChucNangPhanMem.QuanLyNhatKyHeThong);
+    bool isXoa = KiemTraQuyenChucNang.Instance.isXoa;
+}
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-th-list"></i> Nhật ký hệ thống</h1>
+    </div>
+    <ul class="app-breadcrumb breadcrumb side">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">Quản lý Shop Golf</li>
+        <li class="breadcrumb-item active"><a href="#">Nhật kí hệ thống</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-title">
+                <div class="row">
+                    <strong class="col-9 ">Nhật ký hệ thống</strong>
+                    @if (isXoa)
+                    {
+                        <div class="col-3" style="text-align:right;">
+                            <span class="btn btn-outline-danger btn-chucnangxoa" onclick="XoaNhatKi()">Xóa nhật ký</span>
+                        </div>
+                    }
+
+                </div>
+            </div>
+            <div class="tile-body">
+
+                <div id="loadttable">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //Hàm load bảng
+    const LoadTable = () => LoadAjaxContent('@Url.Action("LoadTable","NhatKi")', "#loadttable")
+
+
+    $(function () {
+        LoadTable()
+    })
+    function validate() {
+        FormModalIsValid = true
+        ValidateRequireControl('#txtCode', 'Bạn phải nhập mã đơn vị bán')
+        ValidateRequireControl('#txtName', 'Bạn phải nhập họ tên')
+        if ($('#txtEmail').val().trim() != '') {
+            ValidateRequireControlEmail('#txtEmail', 'Bạn phải nhập đúng địa chỉ email')
+        }
+
+    }
+    function Delete(id) {
+        swal({
+            title: "Bạn có chắc muốn xóa?",
+            text: "Bạn sẽ không thể phục hồi lại nhât ký này",
+            showCancelButton: true,
+            confirmButtonText: "Đồng ý",
+            cancelButtonText: "Hủy bỏ",
+            closeOnConfirm: false,
+            closeOnCancel: true
+        }, function (isConfirm) {
+                if (isConfirm) {
+                let formData = new FormData();
+                formData.append('id', id);
+                $.ajax({
+                    url: '@Url.Action("delete","NhatKi")',
+                    data: formData,
+                    type: 'POST',
+                    success: function (data) {
+                        if (data.isSuccess) {
+                            swal("Đã xóa!", data.Message, "success");
+                            LoadTable()
+                        }
+                        else {
+                            swal("Có lỗi", data.Message,"error");
+                        }
+                    },
+                    error: function (error) {
+                        swal("Có lỗi", error,"error");
+                    },
+                    cache: false,
+                    processData: false,
+                    contentType: false
+                });
+
+                }
+        });
+    }
+
+    function XoaNhatKi() {
+        var itemId = '';
+        var arr = []
+        $.each($("input[name='hethong']:checked"), function () {
+            arr.push($(this).val());
+        });
+        itemId = arr.join('-');
+        swal({
+            title: "Bạn có chắc muốn xóa?",
+            text: "Bạn sẽ không thể phục hồi lại những nhât ký này",
+            showCancelButton: true,
+            confirmButtonText: "Đồng ý",
+            cancelButtonText: "Hủy bỏ",
+            closeOnConfirm: false,
+            closeOnCancel: true
+        }, function (isConfirm) {
+                if (isConfirm) {
+                let formData = new FormData();
+                formData.append('id', itemId);
+                $.ajax({
+                    url: '@Url.Action("deleteAll","NhatKi")',
+                    data: formData,
+                    type: 'POST',
+                    success: function (data) {
+                        if (data.isSuccess) {
+                            swal("Đã xóa!", data.Message, "success");
+                            LoadTable()
+                        }
+                        else {
+                            swal("Có lỗi", data.Message,"error");
+                        }
+                    },
+                    error: function (error) {
+                        swal("Có lỗi", error,"error");
+                    },
+                    cache: false,
+                    processData: false,
+                    contentType: false
+                });
+
+                }
+        });
+    }
+</script>

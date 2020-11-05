@@ -1,0 +1,95 @@
+﻿<script>
+
+    function QLAnh(Id) {
+         $("#ModalQLAnh").modal({ backdrop: "static" });
+        loadingStart();
+        let url = '@Url.Action("_LoadList","AnhSanPham")' + '?SPID=' + Id;
+        $('#idSP').val(Id);
+        LoadAjaxContent(url, "#model_content")
+        loadingStop();
+        }
+    function DeletePicture(Id) {
+        $.ajax({
+                    url: '@Url.Action("Delete","AnhSanPham")'+'?id='+Id,
+                    type: 'Get',
+                    success: function (data) {
+                        console.log(data);
+                        if (data.Success) {
+                            //swal("Đã xóa!", data.Message, "success");
+                            QLAnh($('#idSP').val());
+                        }
+                        else {
+                            swal("Có lỗi", data.Message,"error");
+                        }
+                    },
+                    error: function (error) {
+                        swal("Có lỗi", error, "error");
+                        //console.log("lôi "+data);
+                    },
+                    cache: false,
+                    processData: false,
+                    contentType: false
+                });
+        }
+    function AddPicture() {
+        var formData = new FormData();
+            var totalFiles = document.getElementById("fUploads").files.length;
+            for (var i = 0; i < totalFiles; i++)
+            {
+                var file = document.getElementById("fUploads").files[i];
+
+                formData.append("fUploads", file);
+        }
+        formData.append("idSP",$('#idSP').val())
+            $.ajax({
+                type: "POST",
+                url: '/Admin/AnhSanPham/Upload',
+                data: formData,
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (data.Success) {
+
+                            QLAnh($('#idSP').val());
+                        }
+                        else {
+                            swal("Có lỗi", data.Message,"error");
+                        }
+                },
+                error: function (error) {
+                    swal("Có lỗi", error, "error");
+                }
+            });
+    }
+</script>
+@*Modals thêm mới*@
+<div class="modal fade" id="ModalQLAnh" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog modal-md" style="width:80%" role="document">
+
+        <div class="modal-content">
+            <div class="modal-loading"></div>
+            <div class="modal-header">
+                <h5 class="modal-title" id="mediumModalLabel">Quản lý ảnh</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="tile-body" id="tile-body">
+                    <input type="hidden" id="idSP" />
+                    <div class="row" id="model_content">
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*End Modal thêm mới*@

@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Stanford.ShopGolf.Business.Entity.Brand>
+@using Stanford_ShopGolf.Areas.Admin.Models
+@using Stanford_ShopGolf.Areas.Admin.CommonAdmin
+
+@{
+    Layout = null;
+    //Xử lý kiểm tra quyền sử dụng
+    KiemTraQuyenChucNang.Instance.CheckPermission(ConstantData.ChucNangPhanMem.QuanLyVaiTro);
+    bool isEdit = KiemTraQuyenChucNang.Instance.isSua;
+    bool isDelete = KiemTraQuyenChucNang.Instance.isXoa;
+}
+<div class="table-responsive">
+    <table class="table table-hover table-bordered" id="tbBrand">
+        <thead class="text-md-center">
+            <tr>
+                <th>
+                    Tên thương hiệu
+                </th>
+                <th>
+                    Mô tả
+                </th>
+                <th class="text-md-center">
+                    Ảnh
+                </th>
+                <th>
+                    Ưu tiên
+                </th>
+                @if (isEdit == true || isDelete == true)
+                {
+                    <th width="40px">Xử lý</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BrandName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td class="text-md-center">
+                        <img style="border-radius:3px" src="~/@ImageURL.IMG_BRAND/@item.Avatar" width="80" height="80" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OrderNumber)
+                    </td>
+
+                    @if (isEdit == true || isDelete == true)
+                    {
+                        <td class="text-md-center" width="30px">
+                            @if (isEdit)
+                            {
+                                <a href="#" onclick="Edit(@item.Id)"><i class="fa fa-pencil-square-o"></i></a>}
+
+                            @if (isDelete)
+                            {
+                                @:&nbsp;&nbsp;| &nbsp;
+                                <a href="#" onclick="Delete(@item.Id)"><i class="fa fa-trash-o"></i></a>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<!-- Data table plugin-->
+<script type="text/javascript">$('#tbBrand').DataTable();</script>

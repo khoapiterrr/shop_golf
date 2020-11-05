@@ -1,0 +1,71 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@model CategoryViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section SPAViews {
+    @Html.Partial("_HomeCategory", Model)
+}
+@section Scripts
+{
+    @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/quickviewproduct")
+    @Scripts.Render("~/bundles/hero-slider")
+    @Scripts.Render("~/bundles/rate")
+    @Scripts.Render("~/bundles/zoommer")
+
+    <script>
+        $('#sortProduct').change(function () {
+
+            let urlCurrent = window.location.pathname;
+            let urlsearch = window.location.search
+            if (urlsearch === '') {
+                urlCurrent += `?sort=${$(this).val()}`
+            } else {
+                if (urlsearch.search('sort=') > 0) {
+                    urlCurrent += urlsearch.split('sort')[0] + `sort=${$(this).val()}`
+                } else {
+                    urlCurrent += `${window.location.search}&sort=${$(this).val()}`
+                }
+            }
+            location.href = urlCurrent;
+        });
+
+        $('#btnLoadMore').off('click').on('click', function (e) {
+            e.preventDefault();
+            let page = Number($('#txtPageHidden').val()) + 1;
+            if (Number(page) >= Number($('#txtToTalPageHidden').val())) {
+                $('#btnLoadMore').hide()
+            }
+            let urlCurrent = window.location.pathname;
+            let urlsearch = window.location.search
+            if (urlsearch === '') {
+                urlCurrent += `?page=${page}`
+            } else {
+                urlCurrent += `${window.location.search}&page=${page}`
+            }
+            const totalPage = $('#txtToTalPageHidden').val()
+            $('#txtPageHidden').val(page)
+            $.ajax({
+                url: encodeURI(urlCurrent),
+                cache: false,
+                type: "GET",
+                success: function (data) {
+                    if (data !== '' && data !== undefined) {
+                        $('#loadMoreProductContent').append(data);
+                    }
+
+                }
+            });
+        })
+        $(function () {
+            const urlSearchCurrentPage = window.location.search
+            if (urlSearchCurrentPage.search('sort=') > 0) {
+                $('#sortProduct').val(urlSearchCurrentPage.split('sort=')[1][0])
+            }
+            if (Number($('#txtPageHidden').val()) >= Number($('#txtToTalPageHidden').val())) {
+                $('#btnLoadMore').hide()
+            }
+        })
+    </script>
+}

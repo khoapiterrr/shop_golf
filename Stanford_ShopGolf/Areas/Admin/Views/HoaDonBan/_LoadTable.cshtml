@@ -1,0 +1,101 @@
+﻿@model IEnumerable<Stanford.ShopGolf.Business.Entity.HoaDonBan>
+@using Stanford_ShopGolf.Areas.Admin.Models
+@using Stanford_ShopGolf.Areas.Admin.CommonAdmin
+
+@{
+    Layout = null;
+    //Xử lý kiểm tra quyền sử dụng
+    KiemTraQuyenChucNang.Instance.CheckPermission(ConstantData.ChucNangPhanMem.QuanLyVaiTro);
+    bool isEdit = KiemTraQuyenChucNang.Instance.isSua;
+    bool isDelete = KiemTraQuyenChucNang.Instance.isXoa;
+}
+<div class="table-responsive">
+    <table class="table table-hover table-bordered" id="HoaDonBanTable">
+        <thead class="text-md-center">
+            <tr>
+                <th>
+                    Trạng thái
+                </th>
+                <th>
+                    Mô tả
+                </th>
+                <th>
+                    Ngày tạo
+                </th>
+                <th>
+                    Khách hàng
+                </th>
+                <th>
+                    Tổng tiền
+                </th>
+                <th>
+                    Chi tiết
+                </th>
+               
+
+
+
+                @if (isEdit == true || isDelete == true)
+                {
+                    <th width="40px">Xử lý</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @if (item.DaThanhToan ?? false)
+                        {
+                            <span style="color:green">Đã thanh toán</span>
+                        }
+                        else
+                        {
+                            <span style="color:red">Chưa thanh toán</span>
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MoTa)
+                    </td>
+                    <td>
+                        @(item.NgayTao.HasValue ? item.NgayTao.Value.ToString("dd/MM/yyyy"):"")
+                    </td>
+                    <td>
+                        @(item.KhachHangId > 0 ? item.KhachHang.TenKH : "")
+                    </td>
+                    <td class="text-md-right">
+                       
+                        @Convert.ToDecimal(item.TongTien).ToString("###,###.###") đ
+                    </td>
+
+                    <td class="text-md-center">
+                        <a href="javascript:void(0)" onclick="HoaDonChiTiet(@item.Id)">Chi tiết</a>
+                    </td>
+
+
+                    @if (isEdit == true || isDelete == true)
+                    {
+                        <td class="text-md-center" width="30px">
+                            @if (isEdit)
+                            {
+                                @*<a href="/KhachHang/Edit?id=@item.Id"><i class="fa fa-pencil-square-o"></i></a>*@}
+
+                            @if (isDelete)
+                            {
+                               
+                                <a href="#" onclick="Delete(@item.Id)"><i class="fa fa-trash-o"></i></a>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<!-- Data table plugin-->
+<script type="text/javascript">$('#HoaDonBanTable').DataTable();</script>
+
+
+
+

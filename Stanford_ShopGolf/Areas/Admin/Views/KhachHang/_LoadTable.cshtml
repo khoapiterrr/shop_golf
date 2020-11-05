@@ -1,0 +1,99 @@
+﻿@model IEnumerable<Stanford.ShopGolf.Business.Entity.KhachHang>
+@using Stanford_ShopGolf.Areas.Admin.Models
+@using Stanford_ShopGolf.Areas.Admin.CommonAdmin
+
+@{
+    Layout = null;
+    //Xử lý kiểm tra quyền sử dụng
+    KiemTraQuyenChucNang.Instance.CheckPermission(ConstantData.ChucNangPhanMem.QuanLyVaiTro);
+    bool isEdit = KiemTraQuyenChucNang.Instance.isSua;
+    bool isDelete = KiemTraQuyenChucNang.Instance.isXoa;
+}
+<div class="table-responsive">
+    <table class="table table-hover table-bordered" id="LoaiKHTable">
+        <thead class="text-md-center">
+            <tr>
+
+                <th>
+                    Mã KH
+                </th>
+                <th>
+                    Tên KH
+                </th>
+                <th>
+                    Điện thoại
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    Địa chỉ
+                </th>
+               
+                <th>
+                    Tỉnh thành
+                </th>
+                <th>
+                    Loại KH
+                </th>
+
+
+                @if (isEdit == true || isDelete == true)
+                {
+                    <th width="40px">Xử lý</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MaKH)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TenKH)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DienThoai)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DiaChi)
+                    </td>
+                    
+                    <td>
+                        @(item.TinhThanhId > 0 ? Stanford.ShopGolf.Business.DataProvider.Entities.TinhThanhs.Find(item.TinhThanhId).TenTinh : "")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LoaiKhachHang.TenLoai)
+                    </td>
+
+
+                    @if (isEdit == true || isDelete == true)
+                    {
+                        <td class="text-md-center" width="30px">
+                            @if (isEdit)
+                            {
+                                <a href="/Admin/KhachHang/Edit?id=@item.Id"><i class="fa fa-pencil-square-o"></i></a>}
+
+                            @if (isDelete)
+                            {
+                                @:&nbsp;&nbsp;| &nbsp;
+                                <a href="#" onclick="Delete(@item.Id)"><i class="fa fa-trash-o"></i></a>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<!-- Data table plugin-->
+<script type="text/javascript">$('#LoaiKHTable').DataTable();</script>
+
+
+

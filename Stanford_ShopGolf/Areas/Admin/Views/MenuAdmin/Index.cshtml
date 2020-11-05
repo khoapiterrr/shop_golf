@@ -1,0 +1,327 @@
+﻿@{
+    ViewBag.Title = "Quản lý menu";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@using Stanford_ShopGolf.Areas.Admin.Models
+@using Stanford_ShopGolf.Areas.Admin.CommonAdmin
+@*Xử lý kiểm tra quyền*@
+@{
+    KiemTraQuyenChucNang.Instance.CheckPermission(ConstantData.ChucNangPhanMem.QuanLyVaiTro);
+    bool isAdd = KiemTraQuyenChucNang.Instance.isThem;
+}
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-th-list"></i> Quản lý menu</h1>
+    </div>
+    <ul class="app-breadcrumb breadcrumb side">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">Shop Golf</li>
+        <li class="breadcrumb-item active"><a href="#">Menu</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-title">
+                <div class="row">
+                    <strong class="col-9 ">Danh sách menu</strong>
+                    @if (isAdd)
+                    {
+                        <div class="col-3" style="text-align:right;">
+                            <span class="btn btn-primary" onclick="Add()">Thêm mới</span>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="tile-body">
+                <div id="loadttable">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*Modals thêm mới*@
+<div class="modal fade" id="ModalMenu" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mediumModalLabel">Medium Modal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="tile-body" id="tile-body">
+                    <div class="form-group row">
+                        <input type="hidden" id="Id" />
+                        <label class="control-label col-md-2">Tên item <span style="color:red">(*)</span></label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" id="txtTenItem" placeholder="Nhập tên item">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="control-label col-md-2">Menu cha </label>
+                        <div class="col-md-10">
+                            @Html.DropDownList("ddlMenu", (SelectList)ViewBag.ddlMenu, "--- Chọn menu ---", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-2">Ảnh </label>
+                        <div class="col-md-10">
+                            <input type="hidden" id="txtAnh" />
+                            <input type="file"  class="form-control-file" id="fileUpload" />
+                            <img id="img" style="width:50%;" class="img-thumbnail"/>
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-2">Head Title </label>
+                        <div class="col-md-10">
+                            <textarea rows="3" class="form-control" id="txtHead" placeholder="Nhập tiêu đề"></textarea>
+                        </div>
+                    </div>
+       
+                    <div class="form-group row">
+                        <label class="control-label col-md-2">Mô tả </label>
+                        <div class="col-md-10">
+                            <textarea rows="3" class="form-control" id="txtMoTa" placeholder="Nhập mô tả"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-2">Chủ đề</label>
+                        <div class="col-md-4">
+                            @Html.DropDownList("ChuDeId", (SelectList)ViewBag.ddlChuDe, "--- Chọn chủ đề ---", new { @class = "form-control" })
+                        </div>
+                        <label class="control-label col-md-2">Link </label>
+
+                        <div class="col-md-4">
+                            <input class="form-control" type="text" id="txtLink" placeholder="Nhập đường dẫn">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-2">Ưu tiên </label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="number" id="txtSapXep" placeholder="Nhập độ ưu tiên">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnSave" onclick="save()">Confirm</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*End Modal thêm mới*@
+<script>
+    //Hàm load bảng
+    const LoadTable = () => LoadAjaxContent('@Url.Action("_LoadTable","MenuAdmin")', "#loadttable")
+    
+    $(function () {
+        LoadTable()
+
+        $("#fileUpload").change(function () {
+           
+			readURL(this);
+		});
+    })
+
+    
+    function readURL(input) {
+    	if (input.files && input.files[0]) {
+    		var reader = new FileReader();
+
+    		reader.onload = function (e) {
+    			$('#img').attr('src', e.target.result);
+    		}
+
+    		reader.readAsDataURL(input.files[0]);
+    	}
+    }
+    function save() {
+        validate()
+        if (FormModalIsValid) {
+            ////lấy dữ liệu trên fileUpload
+            var fileUpload = $("#fileUpload").get(0);
+            var file = fileUpload.files;
+        	//tạo đối tượng form data
+            let formData = new FormData();
+            formData.append('file',file[0]);
+            formData.append('Id', $('#Id').val());
+            formData.append('TenItem', $('#txtTenItem').val());
+            formData.append('ParentId', $('#ddlMenu').val());
+            formData.append('ChuDeId', $('#ChuDeId').val());
+            formData.append('MoTa', $('#txtMoTa').val());
+            formData.append('Link', $('#txtLink').val());
+            formData.append('SapXep', $('#txtSapXep').val());
+            formData.append('HeadTitle', $('#txtHead').val());
+            
+
+            let url='';
+            if ($('#Id').val() > 0) {
+                url = '@Url.Action("Edit","MenuAdmin")';
+            }
+            else {
+                url = '@Url.Action("Add","MenuAdmin")';
+            }
+            
+            $.ajax({
+                url: url,
+                data: formData,
+                type: 'POST',
+                success: function (data) {
+                    if (data.Success) {
+
+                        $("#ModalMenu").modal("hide")
+                        LoadTable()
+                        $.notify({
+                            title: "Hoàn thành thao tác :",
+                            message: data.Message,
+                            icon: 'fa fa-check'
+                        }, {
+                                type: "success"
+                        });
+                    }
+                    else {
+                        $('#tile-body').nextAll(".spanError").remove();
+                        $('#tile-body').after('<div class="alert alert-dismissible alert-danger spanError">'+data.Message+'</div>')
+                    }
+                },
+                error: function (error) {
+                    $.notify({
+                        title: "Có lỗi xảy ra : ",
+                        message: error,
+                        icon: 'fa fa-check'
+                    }, {
+                            type: (error.Success? "success":"danger")
+                        });
+                },
+                cache: false,
+                processData: false,
+                contentType: false
+                
+            });
+        }
+    }
+
+    //Hàm hiển thị giao diện thêm mới
+    function Add() {
+        //làm mới input
+        $('#txtTenItem').val('')
+        $('#ddlMenu').val('')
+        $('#ChuDeId').val('')
+        $('#Id').val('-1')
+        $('#txtMoTa').val('')
+        $('#txtAnh').val('')
+        $('#txtHead').val('')
+        $('#txtLink').val('')
+        $('#txtSapXep').val('')
+        $("#fileUpload").val('')
+        $("#txtAnh").val('')
+        $("#img").attr("src","");
+                //Xóa lỗi
+        ClearError('#txtTenItem')
+        $('#tile-body').nextAll(".spanError").remove()
+        $('#mediumModalLabel').html('Thêm mới menu')
+        $('#btnSave').html('Thêm mới')
+        $("#ModalMenu").modal({ backdrop: "static" })
+    }
+
+    //Hàm sửa thông tin
+    function Edit(id) {
+        $('#Id').val(id)
+        ClearError('#txtTenItem')
+        $('#tile-body').nextAll(".spanError").remove();
+
+        let formData = new FormData();
+        formData.append('id', id);
+        $.ajax({
+            url: '@Url.Action("GetObjToEdit", "MenuAdmin")',
+            data: formData,
+            type: 'POST',
+            success: function (data) {
+                if (data != null) {
+                    $('#btnSave').html('Cập nhật');
+
+                    console.log(data);
+                    $('#txtTenItem').val(data.Data.TenItem)
+                    $('#ddlMenu').val(data.Data.ParentId)
+                    $('#ChuDeId').val(data.Data.ChuDeId)
+                    $('#txtMoTa').val(data.Data.MoTa)
+                    $('#txtLink').val(data.Data.Link)
+                    $('#txtHead').val(data.Data.HeadTitle)
+                    $('#txtAnh').val(data.Data.ImagePath)
+                    $('#txtSapXep').val(data.Data.SapXep)
+                    $("#fileUpload").val('');
+                    $("#txtAnh").val(data.Data.ImagePath)
+                    $("#img").attr("src",`/Content/Images/Menu/${data.Data.ImagePath}`);
+
+                    $('#mediumModalLabel').html('Chỉnh sửa menu')
+
+                    //hiện modal
+                    $("#ModalMenu").modal({ backdrop: "static" })
+                }
+                else {
+                    debugger
+                    swal("Có lỗi", data.Message, "error");
+                }
+            },
+            error: function (result, textStatus, errorThrown) {
+                debugger
+                swal("Có lỗi", "Error:" + errorThrown + " - " + textStatus + " - " + result, "error");
+            },
+            cache: false,
+            processData: false,
+            contentType: false
+        });
+
+    }
+    function validate() {
+        FormModalIsValid = true
+        ValidateRequireControl('#txtTenItem', 'Bạn phải nhập tên menu')
+    }
+
+    function Delete(id) {
+        swal({
+            title: "Bạn có chắc muốn xóa ?",
+            text: "Bạn sẽ không thể phục hồi lại menu này",
+            showCancelButton: true,
+            confirmButtonText: "Đồng ý",
+            cancelButtonText: "Hủy bỏ",
+            closeOnConfirm: false,
+            closeOnCancel: true
+        }, function (isConfirm) {
+                if (isConfirm) {
+                let formData = new FormData();
+                formData.append('id', id);
+                $.ajax({
+                    url: '@Url.Action("Delete","MenuAdmin")',
+                    data: formData,
+                    type: 'POST',
+                    success: function (data) {
+                        if (data.Success) {
+                            swal("Đã xóa", data.Message, "success");
+                            LoadTable()
+                        }
+                        else {
+                            swal("Có lỗi", data.Message,"error");
+                        }
+                    },
+                    error: function (error) {
+                        swal("Có lỗi", error,"error");
+                    },
+                    cache: false,
+                    processData: false,
+                    contentType: false
+                });
+
+                }
+        });
+    }
+
+</script>

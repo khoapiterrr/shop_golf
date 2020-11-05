@@ -1,0 +1,73 @@
+﻿@model IEnumerable<Stanford_ShopGolf.Areas.Admin.Models.NhatKyModel>
+@{
+    /**/
+
+    ViewBag.Title = "LoadTable";
+    Layout = null;
+}
+
+@using Stanford_ShopGolf.Areas.Admin.Models
+@using Stanford_ShopGolf.Areas.Admin.CommonAdmin
+@*Xử lý kiểm tra quyền*@
+@{
+    KiemTraQuyenChucNang.Instance.CheckPermission(ConstantData.ChucNangPhanMem.QuanLyNhatKyHeThong);
+    bool isXoa = KiemTraQuyenChucNang.Instance.isXoa;
+}
+
+<div class="table-responsive">
+    <table class="table table-hover table-bordered" id="sampleTable">
+        <thead class="text-md-center">
+            <tr>
+                <th><input type="checkbox" id="checkAll" /></th>
+                <th>Tên người tạo</th>
+                <th>Tên nhật kí</th>
+                <th>Tên chức năng</th>
+                <th>Ngày tạo</th>
+                <th>Hành động</th>
+                <th>Địa chỉ máy</th>
+                @if (isXoa)
+                {
+                    <th style="width:40px" class="btn-chucnangxoa"> Xử lý</th>
+                }
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><input type="checkbox" name="hethong" class="myCheckbox" value="@item.Id" /></td>
+                    <td>@item.TenNguoiTao</td>
+                    <td>@item.TenNhatKy</td>
+                    <td>@item.TenChucNang</td>
+                    <td>@item.NgayTao</td>
+                    <td>@item.HanhDong</td>
+                    <td>@item.DiaChiIP</td>
+                    @if (isXoa)
+                    {
+                        <td class="text-md-center">
+                            <a href="#" onclick="Delete(@item.Id)" class="btn-chucnangxoa"><i class="fa fa-trash-o"></i></a>
+                        </td>
+                    }
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Data table plugin-->
+<script type="text/javascript">$('#sampleTable').DataTable();</script>
+<script>
+    $(document).ready(function () {
+
+        $('#checkAll').change(function () {
+            if ($('#checkAll').is(':checked')) {
+                $(".myCheckbox").prop('checked', true);
+            }
+            else {
+                $(".myCheckbox").prop('checked', false);
+            }
+        });
+    });
+</script>

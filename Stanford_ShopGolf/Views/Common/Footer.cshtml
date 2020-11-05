@@ -1,0 +1,73 @@
+﻿<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-12 col-lg-5 block-news-letter">
+                <div class="social-links">
+                    <a href="#" title="Chúng tôi trên Facebook"><i class="fa fa-facebook-f"></i></a>
+                    <a href="#" title="Chúng tôi trên Tweeter"><i class="fa fa-twitter"></i></a>
+                    <a href="#" title="Chúng tôi trên Instagram"><i class="fa fa-instagram"></i></a>
+                    <a href="#" title="Chúng tôi trên LinkedIn"><i class="fa fa-linkedin"></i></a>
+                </div>
+                <h5>Đăng ký nhận tin khuyến mãi:</h5>
+                <form action="#" id="email-alert-signup" method="post" novalidate="novalidate">
+                    <div class="email-alert-input-wrapper">
+                        <div class="input-group input-group-lg mb-3">
+                            <input type="email" class="form-control" placeholder="Nhập email của bạn" aria-label="Email" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-lg btn-outline-primary" type="button"><i class="fa fa-angle-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="result-message">&nbsp;</div>
+                </form>
+            </div>
+            <div class="col-md-12 col-12 col-lg-7">
+                <div class="row">
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-12 footer-item">
+                        @**Html.Action("FooterMenu", "Menu", new { menuName = "CustommerService" })*@
+                        <div class="footer-menu">
+                            <h5 class="expanded">Bán hàng</h5>
+                            <ul>
+                                <li><a href="#" title="smart golf viet nam">Hotline mua hàng: 0869.188.255</a></li>
+                                <li><a href="#" title="smart golf viet nam">Chính sách về giá</a></li>
+                                <li><a href="#" title="smart golf viet nam">Gậy golf</a></li>
+  
+                                <li><a href="#" title="smart golf viet nam">Giày golf</a></li>
+                                <li><a href="#" title="smart golf viet nam">Áo thi đấu</a></li>
+                                <li><a href="#" title="smart golf viet nam">Chương trình khuyến mại</a></li>
+                            </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-12 footer-item">
+                            @**Html.Action("FooterMenu", "Menu", new { menuName = "Services" })**@
+                            <div class="footer-menu">
+                                <h5 class="expanded">Dịch vụ</h5>
+                                <ul>
+                                    <li><a href="#" title="smart golf viet nam">Sản phẩm dịch vụ golf</a></li>
+                                    <li><a href="#" title="smart golf viet nam">Đăng ký sân tập</a></li>
+                                    <li><a href="#" title="smart golf viet nam">Đăng ký khách sạn</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-12 footer-item">
+                            @**Html.Action("FooterMenu", "Menu", new { menuName = "CompanyInfomation" })*@
+                            <div class="footer-menu">
+                                <h5 class="expanded">Thông tin công ty</h5>
+                                <ul>
+                                    <li><b>Công ty CP Smart Golf Việt Name</b></li>
+                                    <li>Địa chỉ: Số 20 ngõ 678 Đường Láng, P. Láng Thượng, Đống Đa, Hà Nội</li>
+                                    <li>Điện thoại: 024. 6662 3355</li>
+                                    <li>Email: support@smartgolf.com</li>
+                                    <li>Website: <a href="#" title="smart golf viet nam">smartgolf.com</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        
+        <p>&copy; @DateTime.Now.Year - SmartGolf</p>
+    </div>
+
+</footer>

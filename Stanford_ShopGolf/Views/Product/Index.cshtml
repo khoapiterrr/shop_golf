@@ -1,0 +1,52 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@model ProductViewModel
+@{
+    ViewBag.Title = "Sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section SPAViews {
+    @Html.Partial("_HomeProduct", Model)
+}
+@section Scripts
+{
+    @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/hero-slider")
+    @Scripts.Render("~/bundles/rate")
+    @Scripts.Render("~/bundles/zoommer")
+    @Scripts.Render("~/bundles/quickviewproduct")
+}
+@section jsFooter{
+    <script>
+        $(function () {
+            
+            $(".round-click").click(function () {
+                
+                $("#" + $(this).closest("ul").attr("id") + " li").each(function () {  $(this).removeClass("selected") })
+
+                $(this).closest("li").addClass("selected");
+            })
+
+            SelectAllFirst()
+        })
+        function SelectAllFirst() {
+            let ulcolor = $('#ul_color');
+            let ulwaist = $('#ul_waist');
+            let ulinseam = $('#ul_inseam');
+            let ulsize = $('#ul_size');
+            if (ulcolor) {
+                $("#ul_color li").first().addClass("selected");
+            }
+            if (ulwaist) {
+                $("#ul_waist li").first().addClass("selected");
+            }
+            if (ulinseam) {
+                $("#ul_inseam li").first().addClass("selected");
+            }
+            if (ulsize) {
+                $("#ul_size li").first().addClass("selected");
+            }
+        }
+
+        
+    </script>
+}

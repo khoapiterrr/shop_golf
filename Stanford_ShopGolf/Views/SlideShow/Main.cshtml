@@ -1,0 +1,30 @@
+﻿@using Stanford.ShopGolf.Business.Entity
+@model List<Slider>
+<div class="hero-slider single-item">
+    @foreach (var item in Model)
+    {
+        //var clsText = Model.IndexOf(item) % 2 == 1 ? "text-right" : "text-left";
+        //var imagePath = Model.IndexOf(item) % 2 == 1 ? "/Media/Images/PRO-SL-HERO-D.png" : "/Media/Images/TM-M2-HERO-D.png";
+
+        <div class="slider-item @item.KieuHienThi">
+            <picture class="full-hero-image">
+                <!--[if IE 9]><video style="display: none;"><![endif]-->
+
+
+                <source srcset="/Content/images/Slider/@item.AnhDaiDien" media="(max-width: 767px)">
+
+                <!--[if IE 9]></video><![endif]-->
+
+                <img srcset="/Content/images/Slider/@item.AnhDaiDien" media="(min-width: 768px)" alt="@item.TenSlider">
+
+            </picture>
+            <div class="hero-content">
+                <div class="hero-content-inner">
+                    <div class="hero-title">@item.TenSlider</div>
+                    <div class="hero-sub-title">@item.MoTa</div>
+                    <a href="@item.Link" class="btn btn-lg btn-warning">Mua ngay</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

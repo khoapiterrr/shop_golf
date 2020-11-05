@@ -1,0 +1,29 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@model IEnumerable<ProductViewModel>
+
+@foreach (var item in Model)
+{
+    <div class="col-lg-4 col-sm-6 col-md-4 col-12">
+        <div class="product-item">
+            <a href="@item.Url">
+                @Html.Partial("Product.List.Item.Image", item)
+            </a>
+            @if (item.ShowBrand)
+            {
+                @Html.Partial("Product.List.Item.Brand", item.Brand)
+            }
+            <div class="product-name"><a href="@item.Url" class="product-name" itemprop="name">@item.Name</a></div>
+            <div class="product-description-pane">
+                @if (item.ShowRate)
+                {
+                    @Html.Partial("Product.List.Item.Rate", item.Reviews)
+                }
+                @if (item.ShowPrice)
+                {
+                    @Html.Partial("Product.List.Item.Price", item.Price)
+                }
+            </div>
+            @Html.Partial("Product.List.Item.Action", item)
+        </div>
+    </div>
+}

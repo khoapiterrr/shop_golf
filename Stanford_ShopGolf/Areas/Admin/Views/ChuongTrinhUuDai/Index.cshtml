@@ -1,0 +1,269 @@
+﻿@{
+    ViewBag.Title = "Quản lý chương trình ưu đãi";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@using Stanford_ShopGolf.Areas.Admin.Models
+@using Stanford_ShopGolf.Areas.Admin.CommonAdmin
+@*Xử lý kiểm tra quyền*@
+@{
+    KiemTraQuyenChucNang.Instance.CheckPermission(ConstantData.ChucNangPhanMem.QuanLyVaiTro);
+    bool isAdd = KiemTraQuyenChucNang.Instance.isThem;
+}
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-th-list"></i> Quản lý chương trình ưu đãi</h1>
+    </div>
+    <ul class="app-breadcrumb breadcrumb side">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">Shop Golf</li>
+        <li class="breadcrumb-item active"><a href="#">Chương trình ưu đãi</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-title">
+                <div class="row">
+                    <strong class="col-9 ">Danh sách chương trình ưu đãi</strong>
+                    @if (isAdd)
+                    {
+                        <div class="col-3" style="text-align:right;">
+                            <span class="btn btn-primary" onclick="Add()">Thêm mới</span>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="tile-body">
+                <div id="loadttable">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*Modals thêm mới*@
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mediumModalLabel">Medium Modal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="tile-body" id="tile-body">
+                    <div class="form-group row">
+                        <input type="hidden" id="isInsert" />
+                        <label class="control-label col-md-3">Tên ưu đãi <span style="color:red">(*)</span></label>
+                        <div class="col-md-9">
+                            <input class="form-control" type="text" id="txtname" placeholder="Nhập tên chương trình ưu đãi">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">Mô tả </label>
+                        <div class="col-md-9">
+                            <textarea class="form-control" id="txtmota" placeholder="Nhập mô tả" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">Từ ngày <span style="color:red">(*)</span></label>
+                        <div class="col-md-9">
+                            <input class="form-control" type="text" id="txtdate1" placeholder="Ngày bắt đầu khuyến mãi">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">Đến ngày <span style="color:red">(*)</span></label>
+                        <div class="col-md-9">
+                            <input class="form-control" type="text" id="txtdate2" placeholder="Ngày kết thúc khuyến mãi">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnSave" onclick="save()">Confirm</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*End Modal thêm mới*@
+<!-- Page specific javascripts-->
+<script type="text/javascript" src="~/Content/Admin/js/plugins/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="~/Content/Admin/js/plugins/bootstrap-datepicker.min.js"></script>
+<script>
+        //Hàm load bảng
+        const LoadTable = () => LoadAjaxContent('@Url.Action("LoadTable","ChuongTrinhUuDai")', "#loadttable")
+
+        $(function () {
+            LoadTable()
+        })
+
+        function save() {
+            validate()
+            if (FormModalIsValid) {
+                let isAdd = $('#isInsert').val();
+                let urlAction = '';
+                if (isAdd < 0) {
+                    urlAction = '@Url.Action("Create","ChuongTrinhUuDai")'
+                } else {
+                    urlAction = '@Url.Action("Update","ChuongTrinhUuDai")'
+                }
+                let name = $('#txtname').val();
+                let mota = $('#txtmota').val();
+                let tungay = $('#txtdate1').val();
+                let denngay = $('#txtdate2').val();
+                const data = {
+                    tenChuongTrinh: name,
+                    moTa: mota,
+                    tuNgay: tungay,
+                    denNgay:denngay,
+                    id: isAdd
+                }
+                loadingStart()
+                $.ajax({
+                    url: urlAction,
+                    data: JSON.stringify(data),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    success: function (data) {
+                        loadingStop()
+                        if (data.Success) {
+                            $("#Modal").modal("hide")
+                            LoadTable()
+                            $.notify({
+                                title: "Hoàn thành thao tác :",
+                                message: data.Message,
+                                icon: 'fa fa-check'
+                            }, {
+                                    type: "success"
+                            });
+                        }
+                        else {
+                            $('#tile-body').nextAll(".spanError").remove();
+                            $('#tile-body').after('<div class="alert alert-dismissible alert-danger spanError">'+data.Message+'</div>')
+                        }
+                    },
+                    error: function (error) {
+                        loadingStop()
+                        $.notify({
+                            title: "Có lỗi xảy ra : ",
+                            message: error,
+                            icon: 'fa fa-check'
+                        }, {
+                                type: (data.Success? "success":"danger")
+                            });
+                    }
+                });
+            }
+        }
+         $('#txtdate1').datepicker({
+          	format: "mm/dd/yyyy",
+          	autoclose: true,
+          	todayHighlight: true
+         });
+         $('#txtdate2').datepicker({
+          	format: "mm/dd/yyyy",
+          	autoclose: true,
+          	todayHighlight: true
+          });
+        function Add() {
+            //làm mới input
+            $('#txtname').val('')
+            $('#txtmota').val('')
+            $('#txtdate1').val('')
+            $('#txtdate2').val('')
+            $('#isInsert').val('-1')
+            //Xóa lỗi
+            ClearError('#txtname')
+            ClearError('#txtdate1')
+            ClearError('#txtdate2')
+            $('#tile-body').nextAll(".spanError").remove()
+            $('#mediumModalLabel').html('Thêm mới chương trình ưu đãi')
+            $('#btnSave').html('Thêm mới')
+            $("#Modal").modal({ backdrop: "static" })
+        }
+        function Edit(id) {
+            $('#isInsert').val(id)
+            ClearError('#txtname')
+            ClearError('#txtdate1')
+            ClearError('#txtdate2')
+            $('#tile-body').nextAll(".spanError").remove();
+            $.ajax({
+                url: '@Url.Action("GetObjToEdit","ChuongTrinhUuDai")'+ `?id=${id}`,
+                type: 'GET',
+                success: function (data) {
+                    if (data.Success) {
+                        $('#btnSave').html('Cập nhật');
+                        $('#txtname').val(data.Data.TenUuDai)
+                        $('#txtmota').val(data.Data.MoTa)
+                        $('#txtdate1').val(data.Data.TuNgay)
+                        $('#txtdate2').val(data.Data.DenNgay)
+                        $('#mediumModalLabel').html('Chỉnh sửa chương trình ưu đãi')
+
+                        //hiện modal
+                        $("#Modal").modal({ backdrop: "static" })
+                    }
+                    else {
+                        debugger
+                        swal("Có lỗi", data.Message, "error");
+                    }
+                },
+                error: function (result, textStatus, errorThrown) {
+                    debugger
+                    swal("Có lỗi", "Error:" + errorThrown + " - " + textStatus + " - " + result, "error");
+                },
+            });
+
+        }
+        function validate() {
+            FormModalIsValid = true
+            ValidateRequireControl('#txtname', 'Bạn phải nhập length size')
+            ValidateRequireControl('#txtdate1', 'Bạn phải nhập ngày bắt đầu khuyến mãi')
+            ValidateRequireControl('#txtdate2', 'Bạn phải nhập ngày kết thúc khuyến mãi')
+            if ($('#txtdate1').val()) {
+                ValidateRequireControlDate('#txtdate1','Định dạnh ngày tháng năm không đúng')
+            }
+            if ($('#txtdate2').val()) {
+                ValidateRequireControlDate('#txtdate2','Định dạnh ngày tháng năm không đúng')
+            }
+
+        }
+
+        function Delete(id) {
+            swal({
+                title: "Bạn có chắc muốn xóa?",
+                text: "Bạn sẽ không thể phục hồi lại vai trò này!",
+                showCancelButton: true,
+                confirmButtonText: "Đồng ý",
+                cancelButtonText: "Hủy bỏ",
+                closeOnConfirm: false,
+                closeOnCancel: true
+            }, function (isConfirm) {
+                    if (isConfirm) {
+                    $.ajax({
+                        url: '@Url.Action("delete","ChuongTrinhUuDai")' + `?id=${id}`,
+                        type: 'POST',
+                        success: function (data) {
+                            if (data.Success) {
+                                swal("Đã xóa!", data.Message, "success");
+                                LoadTable()
+                            }
+                            else {
+                                swal("Có lỗi", data.Message,"error");
+                            }
+                        },
+                        error: function (error) {
+                            swal("Có lỗi", error,"error");
+                        },
+                        cache: false,
+                        processData: false,
+                        contentType: false
+                    });
+
+                    }
+            });
+        }
+</script>

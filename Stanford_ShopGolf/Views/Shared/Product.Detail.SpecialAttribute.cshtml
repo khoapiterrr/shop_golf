@@ -1,0 +1,219 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@using Stanford_ShopGolf.Extensitions
+@model Stanford.ShopGolf.Business.Entity.SanPham
+
+
+@if (Model.SanPham_Color != null && Model.SanPham_Color.Count > 0)
+{
+    <div class="subsection-container">
+        <div class="attribute">
+            <span class="label">Màu sắc</span>
+            <div class="subsection-content">
+                <ul class="swatches by-size" id="ul_color">
+                    @foreach (var mau in Model.SanPham_Color)
+                    {
+                        <li id="@mau.ColorId" class="selectable "><a class="swatche-item round-click" href="javascript:void(0)" title="@mau.Color.ColorName" style="background-color: @mau.Color.ColorCode;"></a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+}
+
+@if (Model.SanPham_Waist != null && Model.SanPham_Waist.Count > 0)
+{
+    <div class="subsection-container">
+        <div class="attribute">
+            <span class="label">Vòng eo</span>
+            <div class="subsection-content">
+                <ul class="swatches by-size" id="ul_waist">
+                    @foreach (var waist in Model.SanPham_Waist)
+                    {
+                        <li id="@waist.WaistId" class="selectable "><a class="swatche-item round-click" href="javascript:void(0)" title="@waist.Waist.WaistName">@waist.Waist.WaistName</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+}
+
+@if (Model.SanPham_Inseam != null && Model.SanPham_Inseam.Count > 0)
+{
+    <div class="subsection-container">
+        <div class="attribute">
+            <span class="label">Đường may</span>
+            <div class="subsection-content">
+                <ul class="swatches by-size" id="ul_inseam">
+                    @foreach (var inseam in Model.SanPham_Inseam)
+                    {
+                        <li id="@inseam.InseamId" class="selectable "><a class="swatche-item round-click" href="javascript:void(0)" title="@inseam.Inseam.InseamName">@inseam.Inseam.InseamName</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+}
+
+@if (Model.SanPham_Size != null && Model.SanPham_Size.Count > 0)
+{
+    <div class="subsection-container">
+        <div class="attribute">
+            <span class="label">Kích cỡ</span>
+            <div class="subsection-content">
+                <ul class="swatches by-size" id="ul_size">
+                    @foreach (var size in Model.SanPham_Size)
+                    {
+                        <li id="@size.SizeId" class="selectable "><a class="swatche-item round-click" href="javascript:void(0)" title="Size @size.Size.SizeName">@size.Size.SizeName</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+}
+
+
+@if (Model.SanPham_Width != null && Model.SanPham_Width.Count > 0)
+{
+    <div class="subsection-container">
+        <div class="attribute">
+            <span class="label">Chiều rộng</span>
+            <div class="subsection-content">
+                <select class="form-control" id="ddlwidth" style="        width: 100%">
+                    @foreach (var width in Model.SanPham_Width)
+                    {
+                        <option value="@width.WidthId">@width.Width.WidthName</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+@if (Model.SanPham_Shaft != null && Model.SanPham_Shaft.Count > 0)
+{
+    <div class="subsection-container">
+        <div class="attribute">
+            <span class="label">Shaft</span>
+            <div class="subsection-content" style="        width: 100%">
+                <select class="form-control" id="ddlshaft">
+                    @foreach (var shaft in Model.SanPham_Shaft)
+                    {
+                        <option value="@shaft.ShaftId">@shaft.Shaft.ShaftName</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+
+}
+@if (Model.SanPham_LengthSize != null && Model.SanPham_LengthSize.Count > 0)
+{
+    <div class="subsection-container">
+        <div class="attribute">
+            <span class="label">Độ dài</span>
+            <div class="subsection-content" style="        width: 100%">
+                <select class="form-control" id="ddlLengthSize">
+                    @foreach (var lengthSize in Model.SanPham_LengthSize)
+                    {
+                        <option value="@lengthSize.LengthId">@lengthSize.LengthSize.LengthSize1</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+
+}
+
+@if (Model.SanPham_Loft != null && Model.SanPham_Loft.Count > 0)
+{
+    <div class="subsection-container">
+        <div class="attribute">
+            <span class="label">Loft</span>
+            <div class="subsection-content" style="        width: 100%">
+
+                <select class="form-control" id="ddlLoft">
+                    @foreach (var loft in Model.SanPham_Loft)
+                    {
+                        <option value="@loft.LoftId">@loft.Loft.LoftDegress</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+}
+@if (Model.SanPham_Bounce != null && Model.SanPham_Bounce.Count > 0)
+{
+    <div class="subsection-container">
+        <div class="attribute">
+            <span class="label">Bounce</span>
+            <div class="subsection-content" style="        width: 100%">
+                <select class="form-control" id="ddlBounce">
+                    @foreach (var bounce in Model.SanPham_Bounce)
+                    {
+                        <option value="@bounce.BounceId">@bounce.Bounce.BounceName</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+}
+@if (Model.SanPham_Flex != null && Model.SanPham_Flex.Count > 0)
+{
+    <div class="subsection-container">
+        <div class="attribute">
+            <span class="label">Flex</span>
+            <div class="subsection-content" style="        width: 100%">
+                <select class="form-control" id="ddlFlex">
+                    @foreach (var flex in Model.SanPham_Flex)
+                    {
+                        <option value="@flex.FlexId">@flex.Flex.FlexName</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+}
+@if (!string.IsNullOrEmpty(Model.GenderName))
+{
+    <div>
+        @{
+            List<int>
+                lstGender = Model.GenderName.Split(';').Select(p => int.Parse(p)).ToList();
+        }
+    </div>
+
+    <div class="subsection-container">
+        <div class="attribute">
+            <span class="label">Giới tính</span>
+            <div class="subsection-content" style="        width: 100%">
+                <select class="form-control" id="ddlGender">
+                    @foreach (var gender in lstGender)
+                    {
+                        
+                        <option value="@gender">@Stanford.ShopGolf.Business.DataProvider.Entities.Genders.Find(gender).GenderName</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+}
+
+
+<div class="subsection-container">
+    <div class="attribute">
+        <span class="label">Tình trạng</span>
+    </div>
+    @if (Model.SoLuong > 0)
+    {
+        <div class="availability">Còn hàng</div>
+    }
+    else
+    {
+        <div class="availability">Hết hàng</div>
+    }
+</div>

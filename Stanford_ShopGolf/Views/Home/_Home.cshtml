@@ -1,0 +1,11 @@
+﻿@using Stanford.ShopGolf.Business.Entity
+@model List<Slider>
+@Html.Action("Main", "SlideShow")
+@foreach (var item in Model)
+{
+    @Html.Partial("_HomeCustomContent" + item.KieuHienThi, item)
+}
+    @*@Html.Partial("_HomeCustomContentRight")
+    @Html.Partial("_HomeCustomContentLeft")
+    @Html.Partial("_HomeCustomContentRight")
+    @Html.Partial("_HomeCustomContentCenter")*@

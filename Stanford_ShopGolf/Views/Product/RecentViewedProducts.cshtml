@@ -1,0 +1,8 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@model IList<ProductViewModel>
+<div class="recent-products">
+    <h3 class="title">Sản phẩm cùng loại</h3>
+    <div class="container">
+        @Html.Partial("Product.CarouselList", Model)
+    </div>
+</div>

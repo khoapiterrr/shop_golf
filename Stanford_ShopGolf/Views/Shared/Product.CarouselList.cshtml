@@ -1,0 +1,10 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@model IEnumerable<ProductViewModel>
+<div class="hero-slider multiple-item">
+    @foreach (var item in Model)
+    {
+        <div class="slider-item mr-3 ml-3">
+            @Html.Partial("Product.List.Item", item)
+        </div>
+    }
+</div>

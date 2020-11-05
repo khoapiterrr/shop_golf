@@ -1,0 +1,10 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@model IList<PictureViewModel>
+<ul id="product-images-list" class="gc-start">
+    @foreach(var item in Model)
+    {
+        <li class="product-image">
+            <img  src="@item.ImagePath" alt="@item.Title" data-gc-caption="@item.Title" />
+        </li>
+    }
+</ul>

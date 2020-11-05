@@ -1,0 +1,257 @@
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<Stanford.ShopGolf.Business.Entity.SanPham>
+
+@{
+    /**/
+
+    ViewBag.Title = "Quản lý sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<p>
+</p>
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-th-list"></i> Quản lý sản phẩm</h1>
+    </div>
+    <ul class="app-breadcrumb breadcrumb side">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">Shop Golf</li>
+        <li class="breadcrumb-item active"><a href="#">Quản lý sản phẩm</a></li>
+    </ul>
+</div>
+@using (Html.BeginForm("DanhSach", "SanPham", FormMethod.Post))
+{
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile">
+                <div class="row">
+                    <div class=" col-md-4">Tìm kiếm:<input type="text" name="q" placeholder="Nhập từ khóa" class="form-control" value="@ViewBag.q" /></div>
+                    <div class="col-md-2">Giá từ:<input type="text" id="txtGiaTu" name="giatu" placeholder="Giá từ" class="form-control" value="@ViewBag.giatu" /></div>
+                    <div class="col-md-2">Đến:<input type="text" id="txtGiaDen" name="giaden" placeholder="Đến" class="form-control" value="@ViewBag.giaden" /></div>
+                    <div class="col-md-2">
+                        Chủ đề:@Html.DropDownList("ddlChuDe", (List<SelectListItem>)ViewBag.ddlChuDe, "--Chủ đề--", new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-2">Loại:@Html.DropDownList("ddlLoai", (List<SelectListItem>)ViewBag.ddlLoai, "-Loại sản phẩm-", new { @class = "form-control" })</div>
+                    <div class="col-md-2">Nhãn hiệu:@Html.DropDownList("ddlNhanHieu", (List<SelectListItem>)ViewBag.ddlNhanHieu, "--Nhãn hiệu--", new { @class = "form-control" })</div>
+
+                    <div class="col-md-2">Giới tính:@Html.DropDownList("ddlGioiTinh", (List<SelectListItem>)ViewBag.ddlGioiTinh, "-Giới tính-", new { @class = "form-control" })</div>
+
+                    <div class="col-md-8 float-right" style="        text-align: right;
+        padding-top: 20px;">
+
+                        <!--button class="btn btn-primary" onclick="XuatBaoCao()"><i class="fa fa-print"></i> Báo cáo</!--button>-->
+                        <ul class="app-nav">
+                            <li style="        padding-right: 5px;">  <input id="btnTimKiem" type="submit" value="Tìm kiếm" class="btn btn-primary" /></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-title">
+                <div class="row">
+                    <strong class="col-9 ">Danh sách sản phẩm</strong>
+
+                    <div class="col-3" style="        margin-bottom: 10px;
+        padding-right: 0px;
+        text-align: right;">
+                        <a href="javascript:void(0)" class="btn btn-success" id="DeleteAll">Phục hồi đã chọn</a>
+                        @Html.ActionLink("Thêm mới", "ThemMoi", null, new { @class = "btn btn-primary" })
+                    </div>
+                </div>
+            </div>
+            <div class="tile-body">
+                <div class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="dataTables_length" id="sampleTable_length">
+                                <label>
+                                    Hiển thị <select id="ABC_length" name="sampleTable_length" aria-controls="sampleTable" class="form-control form-control-sm">
+                                        <option value="10">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select> bản ghi
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="loadtable">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered">
+                                <tr>
+                                    <th class="text-center">
+
+                                        <div class="animated-checkbox">
+                                            <label>
+                                                <input type="checkbox" id="checkedAll"><span class="label-text"></span>
+                                            </label>
+                                        </div>
+                                    </th>
+                                    <th>
+                                        @*@Html.DisplayNameFor(model => model.MaSanPham)*@
+                                        Mã
+                                    </th>
+                                    <th>
+                                        @*@Html.DisplayNameFor(model => model.TenSanPham)*@
+                                        Tên
+                                    </th>
+
+                                    <th>
+                                        @*@Html.DisplayNameFor(model => model.GiaBan)*@
+                                        Giá bán
+                                    </th>
+                                    <th>
+                                        @*@Html.DisplayNameFor(model => model.SoLuong)*@
+                                        Số lượng
+                                    </th>
+                                    <th>
+                                        @*@Html.DisplayNameFor(model => model.AnhDaiDien)*@
+                                        Ảnh
+                                    </th>
+
+                                    <th>
+                                        @*@Html.DisplayNameFor(model => model.TrangThaiId)*@
+                                        Trạng thái
+                                    </th>
+                                    <th>
+                                        @*@Html.DisplayNameFor(model => model.Review)*@
+                                        Review
+                                    </th>
+                                    <th class="text-md-center">Xử lý</th>
+                                </tr>
+
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="text-center">
+                                            <div class="animated-checkbox">
+                                                <label>
+                                                    <input name="checkSingle" class="checkSingle" id="@item.Id" type="checkbox"><span class="label-text"></span>
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.MaSanPham)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TenSanPham)
+                                        </td>
+
+                                        <td>
+                                            @Convert.ToDecimal(item.GiaBan).ToString("###,###.##") đ
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.SoLuong)
+                                        </td>
+                                        <td class="text-md-center">
+                                            <img src="~/Content/Images/SanPham/@item.AnhDaiDien" width="100" />
+                                        </td>
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TrangThaiId)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Review)
+                                        </td>
+                                        <td class="text-md-center">
+                                            <a href="/Admin/SanPham/PhucHoi/@item.Id?type=1" class="btn btn-sm btn-success">Phục hồi</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                            <div class="float-right pagination">
+                                @Html.PagedListPager(Model, page => Url.Action("DanhSachDaXoa", new { page, q = ViewBag.q, pageSize = ViewBag.pageSize, ddlGioiTinh = ViewBag.ddlGioiTinh, ddlChuDe = ViewBag.ddlChuDe, ddlLoai = ViewBag.ddlLoai, ddlNhanHieu = ViewBag.ddlNhanHieu, giatu = ViewBag.giatu, giaden = ViewBag.giaden, }))
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('.pagination>li').addClass("page-item");
+        $('.pagination>li>a').addClass("page-link btn btn-dark");
+        var a = @(ViewBag.pageSize != null?int.Parse(""+ViewBag.pageSize):10);
+        $('#ABC_length').val(a);
+
+        $('#ABC_length').change(function () {
+            var url = "/Admin/SanPham/DanhSachDaXoa?pageSize=" + $('#ABC_length').val();
+            window.location.href = url;
+        });
+        $("#DeleteAll").click(function () {
+            let _lstChecked = [];
+            $(".checkSingle").each(function () {
+                if (this.checked) {
+                    _lstChecked.push(this.id);
+                }
+            });
+
+                let _url = `@Url.Action("DeleteAll","SanPham")`;
+                let _data = {
+                    trangthai: 2,// bỏ xóa
+                    lstChecked: _lstChecked
+                };
+
+            $.ajax({
+                    url: _url,
+                    type: 'Get',
+                    data: _data,
+                    traditional:true,
+                    success: function (data) {
+                        console.log(data);
+                        if (data.Success) {
+                             swal("Đã xóa!", data.Message, "success");
+                             location.reload();
+                        }
+                        else {
+                            swal("Có lỗi", data.Message,"error");
+                        }
+                    },
+                    error: function (error) {
+                        swal("Có lỗi", error, "error");
+                        //console.log("lôi "+data);
+                    },
+
+                });
+        });
+
+        $("#checkedAll").change(function() {
+            if (this.checked) {
+                $(".checkSingle").each(function() {
+                    this.checked=true;
+                });
+            } else {
+                $(".checkSingle").each(function() {
+                    this.checked=false;
+                });
+            }
+        });
+
+        $(".checkSingle").click(function () {
+            if ($(this).is(":checked")) {
+                var isAllChecked = 0;
+
+                $(".checkSingle").each(function() {
+                    if (!this.checked)
+                        isAllChecked = 1;
+                });
+
+                if (isAllChecked == 0) {
+                    $("#checkedAll").prop("checked", true);
+                }
+            }
+            else {
+                $("#checkedAll").prop("checked", false);
+            }
+        });
+    });
+</script>

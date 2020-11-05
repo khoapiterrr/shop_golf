@@ -1,0 +1,105 @@
+﻿<div class="container checkout-container">
+    <div class="row">
+        <div class="col-12v col-md-8 col-lg-8 col-sm-12 col-xs-12">
+            <div class="guest-member-msg">
+                <a href="/Account/Register">Đăng ký tài khoản</a> để tiết kiệm thời gian khi thanh toán và theo dõi đơn hàng
+            </div>
+            <div class="delivery-form">
+                <h5 class="title">Thông tin giao hàng</h5>
+                <form>
+                    <div class="row">
+                        <input class="form-control" type="email" placeholder="Email" name="email">
+                    </div>
+                    <div class="row">
+                        <input class="form-control col" type="text" placeholder="Họ và tên đêm" name="firstname">
+                        <input class="form-control col" type="text" placeholder="Tên" name="lastname">
+                    </div>
+                    <div class="row">
+                        <input class="form-control col" type="text" placeholder="Địa chỉ" name="address">
+                    </div>
+                    <div class="row">
+                        <input class="form-control col" type="text" placeholder="Địa chỉ cơ quan" name="address2">
+                        <input class="form-control col" type="text" placeholder="Mã bưu chính" name="postalcode">
+                    </div>
+                    <div class="row">
+                        <input class="form-control col" type="text" placeholder="Quận/huyện" name="city">
+                        <input class="form-control col" type="text" placeholder="Tỉnh/thành phố" name="region">
+                    </div>
+                    <div class="row">
+                        <input class="form-control col" type="number" placeholder="Số điện thoại" name="phone">
+                        <select id="inputState" class="form-control col">
+                            <option selected>Chọn quốc gia...</option>
+                            <option>...</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="delivery-method-container">
+                <table class="delivery-list">
+                    <thead>
+                        <tr>
+                            <th colspan="2" scope="col">Phương thức vận chuyển</th>
+                            <th scope="col">Thời gian dự tính</th>
+                            <th scope="col">Phí vận chuyển</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="selected">
+                            <td class="check-col">
+                                <input type="radio" name="rd-1" value="0" checked id="rd-1"/>
+                            </td>
+                            <td>
+                                <div class="shipping-title">Chuyển qua bưu điện</div>
+                                <div class="shipping-desc">Chuyển và thu tiền tại nhà khi nhận hàng</div>
+                            </td>
+                            <td>
+                                <div class="shipping-time">Khoảng 6-8 ngày</div>
+                            </td>
+                            <td>
+                                <div class="shipping-desc-cost">@string.Format("{0:0,0 đ}", 99000)</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="check-col">
+                                <input type="radio" name="rd-1" value="1" id="rd-2" />
+                            </td>
+                            <td>
+                                <div class="shipping-title">Chuyển qua bưu điện</div>
+                                <div class="shipping-desc">Chuyển và thu tiền tại nhà khi nhận hàng</div>
+                            </td>
+                            <td>
+                                <div class="shipping-time">Khoảng 6-8 ngày</div>
+                            </td>
+                            <td>
+                                <div class="shipping-desc-cost">@string.Format("{0:0,0 đ}", 99000)</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-center"><button type="button" class="btn btn-primary btn-continue">Tiếp tục</button></div>
+            </div>
+        </div>
+        <div class="col-12v col-md-4 col-lg-4 col-sm-12 col-xs-12 order-review-container">
+            <h5 class="title"><i class="fa fa-cart-plus"></i> Hóa đơn của bạn</h5>
+            <div class="text-center"><button type="button" class="btn btn-primary btn-continue">Tiếp tục</button></div>
+            <table class="order-review-total">
+                <tbody>
+                    <tr>
+                        <td>Tiền hàng</td>
+                        <td>2.000.000 đ</td>
+                    </tr>
+                    <tr>
+                        <td>Phí vận chuyển</td>
+                        <td>100.000 đ</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>Tổng thanh toán</td>
+                        <td>2.100.000 đ</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

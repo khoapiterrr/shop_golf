@@ -1,0 +1,93 @@
+﻿@{
+    ViewBag.Title = "Quản lý khách hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+@using Stanford_ShopGolf.Areas.Admin.Models
+@using Stanford_ShopGolf.Areas.Admin.CommonAdmin
+@*Xử lý kiểm tra quyền*@
+@{
+    KiemTraQuyenChucNang.Instance.CheckPermission(ConstantData.ChucNangPhanMem.QuanLyVaiTro);
+    bool isAdd = KiemTraQuyenChucNang.Instance.isThem;
+}
+
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-th-list"></i> Quản lý khách hàng</h1>
+    </div>
+    <ul class="app-breadcrumb breadcrumb side">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">Shop Golf</li>
+        <li class="breadcrumb-item active"><a href="#">Khách hàng</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-title">
+                <div class="row">
+                    <strong class="col-9 ">Danh sách khách hàng</strong>
+                    @if (isAdd)
+                    {
+                        <div class="col-3" style="text-align:right;">
+                            <a href="/Admin/KhachHang/Add" class="btn btn-primary">Thêm mới</a>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="tile-body">
+                <div id="loadttable">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //Hàm load bảng
+    const LoadTable = () => LoadAjaxContent('@Url.Action("_LoadTable","KhachHang")', "#loadttable")
+
+    $(function () {
+        LoadTable()
+    })
+    function Delete(id) {
+        swal({
+            title: "Bạn có chắc muốn xóa?",
+            text: "Bạn sẽ không thể phục hồi lại khách hàng này!",
+            showCancelButton: true,
+            confirmButtonText: "Đồng ý",
+            cancelButtonText: "Hủy bỏ",
+            closeOnConfirm: false,
+            closeOnCancel: true
+        }, function (isConfirm) {
+                if (isConfirm) {
+
+                $.ajax({
+                    url: '@Url.Action("Delete","KhachHang")'+'?id='+id,
+                    type: 'Get',
+                    success: function (data) {
+                        console.log(data);
+                        if (data.Success) {
+                            swal("Đã xóa!", data.Message, "success");
+                            LoadTable()
+                        }
+                        else {
+                            swal("Có lỗi", data.Message,"error");
+                        }
+                    },
+                    error: function (error) {
+                        swal("Có lỗi", error, "error");
+                        //console.log("lôi "+data);
+                    },
+                    cache: false,
+                    processData: false,
+                    contentType: false
+                });
+
+                }
+        });
+    }
+
+
+
+</script>

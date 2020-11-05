@@ -1,0 +1,31 @@
+﻿@using Stanford_ShopGolf.Extensitions
+@{
+    ViewBag.Title = "Index";
+    ViewBag.Keywords = "chinh sach ban golf, smart golf, mua ban golf, dich vu golf";
+    ViewBag.Description = "Chính sách mua bán các sản phẩm về Golf của SmartGolf luôn rõ ràng và đảm bảo quyền lợi cho quý khách hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section SPAViews {
+
+}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Chính sách bán hàng</li>
+        </ol>
+    </nav>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-lg-12 col-sm-12 col-md-12">
+            @Html.Raw(Html.LayChinhSach())
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+}
+
+

@@ -1,0 +1,9 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@model ProductViewModel
+<div class="product-code-container">
+    <div class="product-code">Mã sản phẩm: @Model.ProductCode</div>
+    @if (!string.IsNullOrEmpty(Model.SKU))
+    {
+        <div class="product-sku" itemprop="sku">SKU: @Model.SKU</div>
+    }
+</div>

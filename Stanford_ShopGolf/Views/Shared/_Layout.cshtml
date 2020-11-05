@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+@Html.Partial("_Head")
+<body>
+    @Html.Action("Header", "Common")
+    <div class="body-content">
+        <div class="container-fluid no-gutters">
+            @RenderBody()
+            @RenderSection("SPAViews", required: false)
+            <hr />
+        </div>
+    </div>
+    @Html.Action("Footer", "Common")
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("Scripts")
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+</body>
+</html>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+@RenderSection("jsFooter", required: false)
+<script>
+    $(function () {
+        CountGioHang();
+        $('#q').autocomplete({
+            source: '@Url.Action("GetMatchingProduct", "Product")',
+            minLength: 1,
+            select: function (event, ui) {
+                window.location.href =
+                  '@Url.Action("Index", "Product")' + '?id=' + ui.item.id;
+            },
+
+        }).data("ui-autocomplete")._renderItem = function (ul, item) {
+            var inner_html ='<div style="width:400px" class="card list_item_container">    <div class="card-header"><div class="row"><div class="col-md-4 image"><img style="width:100%" src="' +item.image + '"></div><div class="col-md-8 label">Tên sản phẩm: <b>'+item.label+'</b><br />Mã sản phẩm: <b>'+item.description+'</b></div><br />Giá: '+item.price+'đ</div></div></div>'
+
+            return $("<li></li>")
+                .data("item.autocomplete", item)
+                .append(inner_html)
+                .appendTo(ul);
+        };
+    });
+    function CountGioHang() {
+        let _url = '@Html.Raw(Url.Action("CountCheckout","CheckOut"))';
+        $.ajax({
+            url: _url,
+            type: 'POST',
+            success: function (data) {
+                $("#countGioHang").text("(" + data + ")");
+            },
+            error: function (error) {
+                alert(error);
+            }
+        });
+    }
+</script>
+@*<div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-3">
+                    <img style="width:100%" src="' +
+                     item.image + '">
+                </div>
+                <div class="col-md-9 label">
+                    item.label<br />
+                    item.description
+                </div>
+            </div>
+        </div>
+    </div>
+    '<a>
+        <div class="list_item_container">
+            <div class="image">
+                <img style="width:30%" src="' +
+                     item.image + '">
+            </div><div class="label">
+                ' + item.label +
+                '
+            </div><div class="description">
+                ' +
+                item.description + '
+            </div>
+        </div>
+    </a>';*@

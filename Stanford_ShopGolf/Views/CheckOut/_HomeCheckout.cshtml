@@ -1,0 +1,117 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@model CheckOutItemTotal
+
+<div class="container">
+    <div class="checkout-container">
+        <div class="cart-actions cart-actions-top">
+            <a class="btn btn-link" href="/#" title="Về trang chủ">Tiếp tục mua hàng</a>
+            <a href="/checkout/changedelivery" title="Tiếp tục" class="btn btn-primary">Tiếp tục</a>
+        </div>
+        <div class="items-list-container">
+            <table class="cart-items">
+                <thead>
+                    <tr>
+                        <th colspan="2" scope="col">Sản phẩm</th>
+                        <th scope="col">Tùy chọn nhận hàng</th>
+                        <th scope="col">Số lượng</th>
+                        <th scope="col">Giá</th>
+                        <th scope="col">Tổng tiền</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td class="item-product">
+                                <img src="@item.ProductThumbPath" class="product-image" />
+                            </td>
+                            <td class="item-details">
+                                <div class="brand-title">@item.BrandName</div>
+                                <div class="product-name">@item.Name</div>
+                                <div class="product-code"><b>Mã:&nbsp;</b> @item.ProductCode</div>
+                                @foreach (var attr in item.Attributes)
+                                {
+                                    <div class="product-attribute"><b>@attr.Name:&nbsp;</b>@attr.Value</div>
+                                }
+                            </td>
+                            <td class="item-delivery-options">
+                                @item.DeliveryOptions
+                            </td>
+                            <td class="item-quality">
+                                <input onchange="ChangeQuantity('@item.guid')" id="@item.guid" type="number" min="1" max="10" value="@item.Quanlity" />
+                                <div class="item-avability">@item.Avability</div>
+                                <div class="item-actions">
+                                    <a href="#" onclick="Delete('@item.guid')" class="btn btn-link text-danger"><i class="fa fa-minus"></i>Xóa</a>
+                                    <a href="#" class="btn btn-link text-warning"><i class="fa fa-heart"></i>Thêm vào yêu thích</a>
+                                </div>
+                            </td>
+                            <td class="item-price">@string.Format("{0:0,0 đ}", item.Price)</td>
+                            <td class="item-price-total">@string.Format("{0:0,0 đ}", item.Total)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="order-total-container">
+            <div class="sub-total-container">
+                <table class="cart-order-totals">
+                    <tbody>
+                        <tr>
+                            <td>Tổng tiền</td>
+                            <td>@string.Format("{0:0,0 đ}", Model.SubTotal)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="cart-actions cart-actions-bottom">
+                    <a class="btn btn-link" href="/#" title="Về trang chủ">Tiếp tục mua hàng</a>
+                    <a href="/checkout/changedelivery" title="Tiếp tục" class="btn btn-primary">Tiếp tục</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function Delete(guid) {
+        let _data = {
+            guid: guid
+        };
+        url = '@Html.Raw(Url.Action("DeleteFormCheckout", "CheckOut"))';
+        $.ajax({
+                url: url,
+                data:  _data,
+                type: 'POST',
+                success: function (data) {
+                    if (data == "Thành công") {
+                        alert("Thành công");
+                        location.reload();
+                    }
+                    else
+                        alert("Thất bại");
+                },
+                error: function (error) {
+
+                }
+                
+            });
+    }
+    function ChangeQuantity(guid) {
+        let _data = {
+            guid: guid,
+            quantity: $("#" + guid).val()
+        };
+        url = '@Html.Raw(Url.Action("ChangeQuantityProduct", "CheckOut"))';
+        $.ajax({
+                url: url,
+                data:  _data,
+                type: 'POST',
+                success: function (data) {
+                    
+                },
+                error: function (error) {
+
+                }
+                
+            });
+    }
+</script>

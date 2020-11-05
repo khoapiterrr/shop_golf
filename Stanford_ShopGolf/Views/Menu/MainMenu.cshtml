@@ -1,0 +1,61 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@model  IEnumerable<MenuViewModel>
+<div class="header-bottom is-hidden-mobile" role="navigation">
+    <div class="container">
+        <ul class="main-menu level-1 abelFont navbar-toggler" role="menubar">
+            @foreach (var itemlv1 in Model)
+            {
+                var hasSub = itemlv1.Children.Count > 0;
+                var subMenuName = "submenu-" + itemlv1.Id.ToString();
+                <li aria-haspopup="true" role="menuitem">
+                    <div class="d-flex justify-content-between flex-row">
+                        <a href="@itemlv1.Url" class="" has-sub-menu">@itemlv1.Name</a>
+                    </div>
+                    @if (hasSub)
+                    {
+                        <div class="level-2">
+                            <div class="level-2-content container">
+                                <div class="level-2-first-block">
+                                    <div class="future-image">
+                                        <img src="~/Content/Images/Menu/@itemlv1.ImagePath" alt="" />
+                                    </div>
+                                    <div class="title">@itemlv1.HeadTitle</div>
+                                    <div class="sub-title">@itemlv1.Description</div>
+                                    <a href="@itemlv1.Url" class="btn btn-primary">Xem thêm</a>
+                                </div>
+                                <ul class="level-2-menu-list">
+                                    @foreach (var itemlv2 in itemlv1.Children)
+                                    {
+                                        var hasSub2 = itemlv2.Children.Count > 0;
+                                        var cls3 = hasSub2 == true ? "has-sub-menu" : string.Empty;
+                                        <li role="menuitem" class="@cls3">
+                                            <div class="d-flex flex-row justify-content-between">
+                                                <a href="@itemlv2.Url">@itemlv2.Name</a>
+                                                @if (hasSub2)
+                                                {
+                                                    <button class="btn btn-link is-hidden-desktop">
+                                                        <i class="fa fa-angle-right"></i>
+                                                    </button>
+                                                }
+                                            </div>
+                                            @if (hasSub2)
+                                            {
+                                                <ul class="level-3">
+                                                    @foreach (var itemlv3 in itemlv2.Children)
+                                                    {
+                                                        <li><a href="@itemlv3.Url">@itemlv3.Name</a></li>
+                                                    }
+                                                </ul>
+                                            }
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    }
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+@Html.Partial("_MenuMobile", Model)

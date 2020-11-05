@@ -1,0 +1,8 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@model IEnumerable<MenuViewModel>
+    <ul class="navbar-nav">
+        @foreach (MenuViewModel item in Model)
+        {
+            <li><a href="@item.Url" title="@item.Description" class="nav-item">@item.Name</a></li>
+        }
+    </ul>

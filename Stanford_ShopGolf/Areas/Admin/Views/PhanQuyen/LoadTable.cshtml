@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Stanford.ShopGolf.Business.Entity.PhanQuyen>
+
+@{
+    ViewBag.Title = "LoadTable";
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-hover table-bordered" id="sampleTable">
+        <thead class="text-md-center">
+            <tr>
+                <th>
+                    Vai trò
+                </th>
+                <th>
+                    Tên chức năng
+                </th>
+
+
+                <th>
+                    Xem
+                </th>
+                <th>
+                    Xóa
+                </th>
+                <th>
+                    Sửa
+                </th>
+                <th>
+                    Thêm mới
+                </th>
+                <th>
+                    Báo cáo
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VaiTro.TenVaiTro)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChucNang.TenChucNang)
+                </td>
+
+
+                <td>
+                    @(Convert.ToBoolean(item.Xem + "") ? "Có quyền" : "Không quyền")
+                </td>
+                <td>
+                    @(Convert.ToBoolean(item.Xoa + "") ? "Có quyền" : "Không quyền")
+                </td>
+                <td>
+                    @(Convert.ToBoolean(item.Sua + "") ? "Có quyền" : "Không quyền")
+                </td>
+                <td>
+                    @(Convert.ToBoolean(item.Them + "") ? "Có quyền" : "Không quyền")
+                </td>
+                <td>
+                    @(Convert.ToBoolean(item.BaoCao + "") ? "Có quyền" : "Không quyền")
+                </td>
+
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<!-- Data table plugin-->
+<script type="text/javascript">$('#sampleTable').DataTable();</script>

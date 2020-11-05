@@ -1,0 +1,120 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@model ProductViewModel
+@{
+    ViewBag.tenSanPham = Model.Name;
+}
+@Html.Partial("BreadCrumb", Model.Category)
+<div class="container product-detail">
+    <div class="row">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6 product-images-container">
+            @Html.Partial("Product.Detail.Images", Model.Images)
+        </div>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6 product-info-container">
+            <div class="product-brand">
+                @Html.Partial("Product.Detail.Brand", Model.Brand)
+                @Html.Partial("Product.Detail.Title", Model)
+                @Html.Partial("Product.List.Item.Price", Model.Price)
+                @Html.Partial("Product.Detail.ProductCode", Model)
+                @Html.Partial("Product.Detail.Review", Model.Reviews)
+                <div class="product-variations">
+                    <form action="/" method="post">
+                        @Html.Partial("Product.Detail.SpecialAttribute", Model.SanPhamEntity)
+                        @Html.Partial("Product.Detail.Quantity", Model)
+                    </form>
+                    @Html.Partial("Product.Detail.Action", Model)
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <ul class="nav nav-tabs nav-tabs-product">
+                <li><a href="#tab-description" class="active" data-toggle="tab">Mô tả chi tiết</a></li>
+                <li><a href="#tab-review" data-toggle="tab">Đánh giá</a></li>
+                <li><a href="#tab-qa" data-toggle="tab">Hỏi đáp</a></li>
+            </ul>
+            <div class="tab-content product-info-tabs">
+                <div id="tab-description" class="tab-pane fade show active">
+                    @Html.Raw(Model.LongDescription)
+                </div>
+                <div id="tab-review" class="tab-pane fade">
+                    @Html.Partial("Product.Detail.ReviewTab", Model)
+                </div>
+                <div id="tab-qa" class="tab-pane fade">
+                    @Html.Partial("Product.Detail.QaTab", Model)
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            @Html.Action("RecentViewedProducts", "Product", new { loaiSP = Model.SanPhamEntity.LoaiId })
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="quickViewProduct">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function SubmitSP() {
+        let color;
+        let waist;
+        let inseam;
+        let size;
+        $("#ul_color li").each(function () {
+            if ($(this).hasClass("selected")) {
+                color = this.id;
+            }
+
+        });
+        $("#ul_waist li").each(function () {
+             if ($(this).hasClass("selected")) {
+                 waist = this.id;
+            }
+        });
+        $("#ul_inseam li").each(function () {
+             if ($(this).hasClass("selected")) {
+                 inseam = this.id;
+            }
+        });
+        $("#ul_size li").each(function () {
+             if ($(this).hasClass("selected")) {
+                 size = this.id;
+            }
+        });
+        let _data = {
+            SanPhamId : @Model.Id,
+            LengthSizeId: $('#ddlLengthSize').val(),
+            ShaftId: $('#ddlshaft').val(),
+            WidthId: $('#ddlwidth').val(),
+            LoftId: $('#ddlLoft').val(),
+            BounceId: $('#ddlBounce').val(),
+            FlexId: $('#ddlFlex').val(),
+            GenderId: $('#ddlGender').val(),
+            SizeId: size,
+            InseamId: inseam,
+            WaistId: waist,
+            ColorId: color,
+            SoLuong: $("#Quantity").val()
+            };
+        console.log(_data);
+         $.ajax({
+                url: '@Html.Raw(Url.Action("InsertToGioHang","Product"))',
+                data:  _data,
+                type: 'POST',
+                success: function (data) {
+                    alert("thành công");
+                    CountGioHang();
+                },
+                error: function (error) {
+                    alert("có lỗi xảy ra");
+                }
+                
+            });
+        }
+</script>

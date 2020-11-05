@@ -1,0 +1,27 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@model ProductViewModel
+<div class="product-item">
+    <a href="@Model.Url">
+        @Html.Partial("Product.List.Item.Image", Model)
+    </a>
+    @if (Model.ShowBrand)
+    {
+        @Html.Partial("Product.List.Item.Brand", Model.Brand)
+    }
+    <div class="product-name"><a href="@Model.Url" class="product-name" itemprop="name">@Model.Name</a></div>
+    <div class="product-description-pane">
+        @*@if (Model.ShowDescription)
+            {
+                @Model.ShortDescription
+            }*@
+        @if (Model.ShowRate)
+        {
+            @Html.Partial("Product.List.Item.Rate", Model.Reviews)
+        }
+        @if (Model.ShowPrice)
+        {
+            @Html.Partial("Product.List.Item.Price", Model.Price)
+        }
+    </div>
+    @Html.Partial("Product.List.Item.Action", Model)
+</div>

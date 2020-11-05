@@ -1,0 +1,12 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@model BrandViewModel
+<div class="product-brand">
+    @if (Model.ShowImage)
+    {
+        <img height="30" src="@Model.ImagePath" class="brand-image" alt="@Model.Title" />
+    }
+    else
+    {
+        <span class="brand-title">@Model.Title</span>
+    }
+</div>

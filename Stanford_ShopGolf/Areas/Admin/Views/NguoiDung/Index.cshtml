@@ -1,0 +1,318 @@
+﻿
+@{
+    ViewBag.Title = "Quản lý người dùng";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@using Stanford_ShopGolf.Areas.Admin.Models;
+@using Stanford_ShopGolf.Areas.Admin.CommonAdmin
+@*Xử lý kiểm tra quyền*@
+@{
+    KiemTraQuyenChucNang.Instance.CheckPermission(ConstantData.ChucNangPhanMem.QuanLyNguoiDung);
+    bool isAdd = KiemTraQuyenChucNang.Instance.isThem;
+}
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-th-list"></i> Quản lý người dùng</h1>
+    </div>
+    <ul class="app-breadcrumb breadcrumb side">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item">Shop Golf</li>
+        <li class="breadcrumb-item active"><a href="#">Người dùng</a></li>
+    </ul>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="tile-title">
+                <div class="row">
+                    <strong class="col-9 ">Danh sách người dùng</strong>
+                    @if (isAdd)
+                    {
+                        <div class="col-3" style="text-align:right;">
+                            <span class="btn btn-primary" onclick="Add()">Thêm mới</span>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="tile-body">
+
+                <div id="loadttable">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*Modals thêm mới*@
+<div class="modal fade" id="ModalNguoiDung" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mediumModalLabel">Medium Modal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="tile-body" id="tile-body">
+                    <div class="form-group row">
+                        <input type="hidden" id="isInsert" />
+                        <label class="control-label col-md-3">Tên đăng nhập <span style="color:red">(*)</span></label>
+                        <div class="col-md-9">
+                            <input class="form-control" type="text" id="txtTaiKhoan" placeholder="Nhập tài khoản">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">Mật khẩu <span style="color:red">(*)</span></label>
+                        <div class="col-md-9">
+                            <input class="form-control" type="password" id="txtPass1" placeholder="Nhập mật khẩu">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">Mật khẩu nhập lại <span style="color:red">(*)</span></label>
+                        <div class="col-md-9">
+                            <input class="form-control" type="password" id="txtPass2" placeholder="Nhập mật khẩu">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">Họ tên <span style="color:red">(*)</span></label>
+                        <div class="col-md-9">
+                            <input class="form-control" type="text" id="txtname" placeholder="Nhập họ tên">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">Mã vai trò <span style="color:red">(*)</span></label>
+                        <div class="col-md-9">
+                            @Html.DropDownList("ddlVaiTro", (SelectList)ViewBag.ddlVaiTro, "--- Chọn vai trò ---", new { @class = "form-control" })
+                        </div>
+                    </div>
+                  
+
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">Email </label>
+                        <div class="col-md-9">
+                            <input class="form-control" type="text" id="txtEmail" placeholder="Nhập địa chỉ email">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">Điện thoại </label>
+                        <div class="col-md-9">
+                            <input class="form-control" type="text" id="txtSDT" placeholder="Nhập số điện thoại">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">Địa chỉ </label>
+                        <div class="col-md-9">
+                            <textarea class="form-control" id="txtDiaChi" rows="2" placeholder="Nhập địa chỉ"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnSave" onclick="save()">Confirm</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*End Modal thêm mới*@
+<script>
+    //Hàm load bảng
+    const LoadTable = () => LoadAjaxContent('@Url.Action("LoadTable","NguoiDung")', "#loadttable")
+
+    $(function () {
+        LoadTable()
+    })
+
+    function save() {
+        validate()
+        if (FormModalIsValid) {
+            let formData = new FormData();
+            formData.append('isInsert', $('#isInsert').val());
+            formData.append('username', $('#txtTaiKhoan').val());
+            formData.append('pwd', $('#txtPass1').val());
+            formData.append('email', $('#txtEmail').val());
+            formData.append('name', $('#txtname').val());
+            formData.append('sdt', $('#txtSDT').val());
+            formData.append('diachi', $('#txtDiaChi').val());
+            formData.append('vaitroid', $('#ddlVaiTro').val());
+            $.ajax({
+                url: '@Url.Action("Add","NguoiDung")',
+                data: formData,
+                type: 'POST',
+                success: function (data) {
+                    if (data.isSuccess) {
+
+                        $("#ModalNguoiDung").modal("hide")
+                        LoadTable()
+                        $.notify({
+                            title: "Hoàn thành thao tác :",
+                            message: data.Message,
+                            icon: 'fa fa-check'
+                        }, {
+                                type: "success"
+                        });
+                    }
+                    else {
+                        $('#tile-body').nextAll(".spanError").remove();
+                        $('#tile-body').after('<div class="alert alert-dismissible alert-danger spanError">'+data.Message+'</div>')
+
+                    }
+
+                },
+                error: function (error) {
+                    $.notify({
+                        title: "Có lỗi xảy ra : ",
+                        message: error,
+                        icon: 'fa fa-check'
+                    }, {
+                            type: (data.isSuccess? "success":"danger")
+                        });
+                },
+                cache: false,
+                processData: false,
+                contentType: false
+            });
+        }
+    }
+    function Add() {
+        //làm mới input
+        $('#txtTaiKhoan').val('')
+        $('#txtPass1').val('')
+        $('#txtPass2').val('')
+        $('#txtEmail').val('')
+        $('#txtSDT').val('')
+        $('#txtname').val('')
+        $('#txtDiaChi').val('')
+        $('#ddlgate').val('')
+        $('#ddlVaiTro').val('')
+        $('#isInsert').val('-1')
+        //Xóa lỗi
+        ClearError('#txtTaiKhoan')
+        ClearError('#txtPass1')
+        ClearError('#txtPass2')
+        ClearError('#txtEmail')
+        ClearError('#txtSDT')
+        ClearError('#txtDiaChi')
+        ClearError('#txtname')
+        ClearError('#ddlVaiTro')
+        $('#tile-body').nextAll(".spanError").remove()
+        $('#mediumModalLabel').html('Thêm mới người dùng')
+        $('#btnSave').html('Thêm mới')
+        $("#ModalNguoiDung").modal({ backdrop: "static" })
+    }
+    function Edit(id) {
+        $('#isInsert').val(id)
+        ClearError('#txtTaiKhoan')
+        ClearError('#txtPass1')
+        ClearError('#txtPass2')
+        ClearError('#txtEmail')
+        ClearError('#txtSDT')
+        ClearError('#txtname')
+        ClearError('#txtDiaChi')
+        ClearError('#ddlVaiTro')
+        $('#tile-body').nextAll(".spanError").remove();
+
+        let formData = new FormData();
+        formData.append('id', id);
+        $.ajax({
+            url: '@Url.Action("GetObjToEdit","NguoiDung")',
+            data: formData,
+            type: 'POST',
+            success: function (data) {
+                if (data != null) {
+                    $('#btnSave').html('Cập nhật');
+                    $('#txtTaiKhoan').val(data.TenDangNhap)
+                    $('#txtPass1').val('Coder!(((23')
+                    $('#txtPass2').val('Coder!(((23')
+                    $('#txtEmail').val(data.Email)
+                    $('#txtSDT').val(data.DienThoai)
+                    $('#txtname').val(data.HoTen)
+                    $('#txtDiaChi').val(data.DiaChi)
+                    if (data.Gate_Id > 0) {
+                        $('#ddlgate').val(data.Gate_Id)
+                    } else {
+                        $('#ddlgate').val('')
+                    }
+
+                    $('#ddlVaiTro').val(data.VaiTroId)
+                    $('#mediumModalLabel').html('Chỉnh sửa người dùng')
+
+                    //hiện modal
+                    $("#ModalNguoiDung").modal({ backdrop: "static" })
+                }
+                else {
+                    debugger
+                    swal("Có lỗi", data.Message, "error");
+                }
+            },
+            error: function (result, textStatus, errorThrown) {
+                debugger
+                swal("Có lỗi", "Error:" + errorThrown + " - " + textStatus + " - " + result, "error");
+            },
+            cache: false,
+            processData: false,
+            contentType: false
+        });
+
+    }
+    function validate() {
+        FormModalIsValid = true
+        ValidateRequireControl('#txtTaiKhoan', 'Bạn phải nhập tên tài khoản')
+        ValidateRequireControl('#txtPass1', 'Bạn phải nhập mật khẩu')
+        ValidateRequireControl('#txtPass2', 'Bạn phải nhập mật khẩu nhập lại')
+        ValidateRequireControl('#txtname', 'Bạn phải nhập họ tên')
+        ValidateRequireControl('#ddlVaiTro', 'Bạn phải chọn vai trò')
+        if ($('#txtEmail').val().trim() != '') {
+            ValidateRequireControlEmail('#txtEmail', 'Bạn phải nhập đúng địa chỉ email')
+        }
+        if ($('#txtPass1').val().trim() != '' && $('#txtPass2').val().trim() != '') {
+            ValidateRequireControlPass('#txtPass1', '#txtPass2','Mật khẩu không trùng khớp. Vui lòng nhập lại')
+        }
+        //if ($('#txtPass1').val().trim() == $('#txtPass2').val().trim()) {
+        //    ValidatePassword('#txtPass1', 'Mật khẩu phải từ 8-15 kí tự bao gồm: chữ hoa, chữ thường, số và kí tự đặc biệt')
+        //}
+    }
+
+    function Delete(id) {
+        swal({
+            title: "Bạn có chắc muốn xóa?",
+            text: "Bạn sẽ không thể phục hồi lại người dùng này",
+            showCancelButton: true,
+            confirmButtonText: "Đồng ý",
+            cancelButtonText: "Hủy bỏ",
+            closeOnConfirm: false,
+            closeOnCancel: true
+        }, function (isConfirm) {
+                if (isConfirm) {
+                let formData = new FormData();
+                formData.append('id', id);
+                $.ajax({
+                    url: '@Url.Action("delete","NguoiDung")',
+                    data: formData,
+                    type: 'POST',
+                    success: function (data) {
+                        if (data.isSuccess) {
+                            swal("Đã xóa", data.Message, "success");
+                            LoadTable()
+                        }
+                        else {
+                            swal("Có lỗi", data.Message,"error");
+                        }
+                    },
+                    error: function (error) {
+                        swal("Có lỗi", error,"error");
+                    },
+                    cache: false,
+                    processData: false,
+                    contentType: false
+                });
+
+                }
+        });
+    }
+
+</script>

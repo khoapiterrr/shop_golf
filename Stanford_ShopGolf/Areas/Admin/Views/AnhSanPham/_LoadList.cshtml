@@ -1,0 +1,67 @@
+﻿@model IEnumerable<Stanford.ShopGolf.Business.Entity.AnhSanPham>
+@using Stanford_ShopGolf.Areas.Admin.Models
+@using Stanford_ShopGolf.Areas.Admin.CommonAdmin
+
+@{
+    Layout = null;
+    //Xử lý kiểm tra quyền sử dụng
+    KiemTraQuyenChucNang.Instance.CheckPermission(ConstantData.ChucNangPhanMem.QuanLyVaiTro);
+    bool isEdit = KiemTraQuyenChucNang.Instance.isSua;
+    bool isDelete = KiemTraQuyenChucNang.Instance.isXoa;
+}
+
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <input type="file" name="files" multiple="multiple" id="fUploads" class="form-control-file" "  />
+        <div id="image_preview" style="width:100%; display:inline-block; padding-top:3px;"></div>
+    </div>
+    <div class="col-md-1">
+        <button class="btn btn-sm btn-primary" onclick="AddPicture()">Thêm mới</button>
+
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-hover table-bordered" id="HoaDonChiTietTable">
+        <thead class="text-md-center">
+            <tr>
+                <th>
+                    Ảnh
+
+                </th>
+
+
+
+
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-md-right">
+                        <div class="row">
+                            <div class="col-12">
+                                <button class="btn btn-sm btn-danger" onclick="DeletePicture(@item.Id)">Xóa</button>
+                            </div>
+                            <div class="col-12">
+                                <img src="~/Content/Images/SanPham/AnhSP/@item.Avatar" style="width:95%" alt="." class="img-thumbnail" />
+                            </div>
+                            
+                        </div>
+                        
+
+                    </td>
+
+
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+

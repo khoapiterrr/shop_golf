@@ -1,0 +1,593 @@
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<Stanford.ShopGolf.Business.Entity.SanPham>
+
+@{
+    /**/
+
+    ViewBag.Title = "Quản lý sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<style>
+    .hidden-input {
+        opacity: 0;
+        /*visibility: hidden;*/
+        display: none;
+    }
+</style>
+<p>
+</p>
+<div class="app-title">
+    <div>
+        <h1><i class="fa fa-th-list"></i> Quản lý sản phẩm</h1>
+    </div>
+    <ul class="app-breadcrumb breadcrumb side">
+        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+        <li class="breadcrumb-item"><a href="/Admin/HomeAdmin">Shop Golf</a></li>
+        <li class="breadcrumb-item active"><a href="#">Quản lý sản phẩm</a></li>
+    </ul>
+</div>
+@using (Html.BeginForm("DanhSach", "SanPham", FormMethod.Post))
+{
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile">
+                <div class="row">
+                    <div class=" col-md-4">Tìm kiếm:<input type="text" name="q" placeholder="Nhập từ khóa" class="form-control" value="@ViewBag.q" /></div>
+                    <div class="col-md-2">Giá từ:<input type="text" id="txtGiaTu" name="giatu" placeholder="Giá từ" class="form-control" value="@ViewBag.giatu" /></div>
+                    <div class="col-md-2">Đến:<input type="text" id="txtGiaDen" name="giaden" placeholder="Đến" class="form-control" value="@ViewBag.giaden" /></div>
+                    <div class="col-md-2">
+                        Chủ đề:@Html.DropDownList("ddlChuDe", (List<SelectListItem>)ViewBag.ddlChuDe, "--Chủ đề--", new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-2">Loại:@Html.DropDownList("ddlLoai", (List<SelectListItem>)ViewBag.ddlLoai, "-Loại sản phẩm-", new { @class = "form-control" })</div>
+                    <div class="col-md-2">Nhãn hiệu:@Html.DropDownList("ddlNhanHieu", (List<SelectListItem>)ViewBag.ddlNhanHieu, "--Nhãn hiệu--", new { @class = "form-control" })</div>
+
+                    <div class="col-md-2">Giới tính:@Html.DropDownList("ddlGioiTinh", (List<SelectListItem>)ViewBag.ddlGioiTinh, "-Giới tính-", new { @class = "form-control" })</div>
+
+                    <div class="col-md-8 float-right" style="        text-align: right;
+        padding-top: 20px;">
+
+                        <!--button class="btn btn-primary" onclick="XuatBaoCao()"><i class="fa fa-print"></i> Báo cáo</!--button>-->
+                        <ul class="app-nav">
+                            <li style="        padding-right: 5px;">  <input id="btnTimKiem" type="submit" value="Tìm kiếm" class="btn btn-primary" /></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile">
+            <div class="row text-right">
+                <div class="col-md-3"></div>
+                <label class="control-label col-2" style="text-align: right;">Trạng thái:</label>
+                <div class="col-2">
+                    <select class="form-control" id="ddlDuyet">
+                        <option value="1" selected="">Đã duyệt</option>
+                        <option value="2">Chưa duyệt</option>
+                    </select>
+                </div>
+
+                <div class="col-5">
+                    <a href="javascript:void(0)" class="btn btn-primary" id="Duyet_BoDuyet_DaC  hon">Phê duyệt</a>&nbsp;<a href="javascript:void(0)" class="btn btn-danger" id="DeleteAll">Xóa tất cả</a>&nbsp;<a href="javascript:void(0)" id="btnAddDiscount" class="btn btn-secondary">Chương trình ưu đãi</a>
+                    &nbsp;<a class="btn btn-primary" href="/Admin/SanPham/ThemMoi">Thêm mới</a>
+                </div>
+            </div>
+            <div class="tile-title">
+                <div class="row">
+                    <strong class="col-6">Danh sách sản phẩm</strong>
+                </div>
+            </div>
+
+            <div class="tile-body">
+                <div class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="dataTables_length" id="sampleTable_length">
+                                <label>
+                                    Hiển thị <select id="ABC_length" name="sampleTable_length" aria-controls="sampleTable" class="form-control form-control-sm">
+                                        <option value="10">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select> bản ghi
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="loadtable">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered">
+                                <tr>
+                                    <th class="text-center">
+
+                                        <div class="animated-checkbox">
+                                            <label>
+                                                <input type="checkbox" id="checkedAll"><span class="label-text"></span>
+                                            </label>
+                                        </div>
+                                    </th>
+                                    <th>
+                                        @*@Html.DisplayNameFor(model => model.MaSanPham)*@
+                                        Mã
+                                    </th>
+                                    <th>
+                                        @*@Html.DisplayNameFor(model => model.TenSanPham)*@
+                                        Tên
+                                    </th>
+
+                                    <th>
+                                        @*@Html.DisplayNameFor(model => model.GiaBan)*@
+                                        Giá bán
+                                    </th>
+                                    <th>
+                                        @*@Html.DisplayNameFor(model => model.SoLuong)*@
+                                        Số lượng
+                                    </th>
+                                    <th>
+                                        @*@Html.DisplayNameFor(model => model.AnhDaiDien)*@
+                                        Ảnh
+                                    </th>
+
+                                    <th>
+                                        @*@Html.DisplayNameFor(model => model.TrangThaiId)*@
+                                        Trạng thái
+                                    </th>
+                                    <th>
+                                        @*@Html.DisplayNameFor(model => model.Review)*@
+                                        Review
+                                    </th>
+                                    <th>
+                                        @*@Html.DisplayNameFor(model => model.DaDuyet)*@
+                                        Đã duyệt
+                                    </th>
+                                    <th class="text-md-center">Xử lý</th>
+                                </tr>
+
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="text-center">
+                                            <div class="animated-checkbox">
+                                                <label>
+                                                    <input name="checkSingle" class="checkSingle" id="@item.Id" type="checkbox"><span class="label-text"></span>
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.MaSanPham)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TenSanPham)
+                                        </td>
+
+                                        <td>
+                                            @Convert.ToDecimal(item.GiaBan).ToString("###,###.##") đ
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.SoLuong)
+                                        </td>
+                                        <td class="text-md-center">
+                                            <img src="~/Content/Images/SanPham/@item.AnhDaiDien" width="100" />
+                                            <br />
+                                            <a href="javascript:void(0);" class="btn btn-sm" onclick="QLAnh(@item.Id)">Quản lý ảnh</a>
+                                        </td>
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TrangThaiId)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Review)
+                                        </td>
+                                        <td>
+                                            @if (item.DaDuyet ?? false)
+                                            {
+
+                                                <span class="badge badge-success btn-Duyet" id="span_@item.Id">Duyệt</span>
+
+                                                @*<span class="lblDuyet" id="span_@item.Id" style="color:green">Đã duyệt</span>*@
+                                            }
+                                            else
+                                            {
+
+                                                <span class="badge badge-danger btn-Duyet" id="span_@item.Id">Chưa duyệt</span>
+
+                                                @*<span class="lblDuyet" id="span_@item.Id" style="color:red">Chưa duyệt</span>*@
+                                            }
+                                        </td>
+                                        <td class="text-md-center">
+                                            <a href="/Admin/SanPham/Sua/@item.Id"><i class="fa fa-pencil-square-o"></i></a>
+                                            &nbsp;&nbsp;| &nbsp;
+                                            <a href="/Admin/SanPham/PhucHoi/@item.Id?type=2" onclick="Delete(@item.Id)"><i class="fa fa-trash-o"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                            <div class="float-right pagination">
+                                @Html.PagedListPager(Model, page => Url.Action("DanhSach", new { page, q = ViewBag.q, pageSize = ViewBag.pageSize, ddlGioiTinh = ViewBag.GioiTinh, ddlChuDe = ViewBag.ChuDe, ddlLoai = ViewBag.Loai, ddlNhanHieu = ViewBag.NhanHieu, giatu = ViewBag.giatu, giaden = ViewBag.giaden, }))
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#txtTypeDiscount").change(e => {
+            const selected = e.target.value;
+            if (selected === '1') {
+                $('#hiddenGiaGiam').removeClass('hidden-input')
+                $('#hiddenPercentDiscount').addClass('hidden-input')
+            } else if (selected === '2') {
+                $('#hiddenGiaGiam').addClass('hidden-input')
+                $('#hiddenPercentDiscount').removeClass('hidden-input')
+            }
+        });
+        $('.pagination>li').addClass("page-item");
+        $('.pagination>li>a').addClass("page-link btn btn-dark");
+        var a = @(ViewBag.pageSize != null?int.Parse(""+ViewBag.pageSize):10);
+        $('#ABC_length').val(a);
+
+        $('#ABC_length').change(function () {
+            var url = "/Admin/SanPham/DanhSach?pageSize=" + $('#ABC_length').val();
+            window.location.href = url;
+        });
+
+        $(".btn-Duyet").click(function () {
+            let id = this.id.split("_")[1];
+            let spanid = this.id;
+            let _data = {
+                id: id
+            };
+            $.ajax({
+                    url: `@Url.Action("DuyetOne","SanPham")`,
+                    type: 'Get',
+                    data: _data,
+                    success: function (data) {
+                        console.log(data);
+                        if (data.Success) {
+
+                                if ($('#'+spanid).text() == "Chưa duyệt") {
+                                    swal("Đã duyệt thành công", "Các sản phẩm được tích chọn", "success");
+                                    $('#'+spanid).removeClass("badge-danger");
+                                    $('#'+spanid).addClass("badge-success");
+                                    $('#'+spanid).text("Duyệt");
+                                }
+                                else if ($('#'+spanid).text() == "Duyệt") {
+                                    swal("Bỏ duyệt thành công", "Các sản phẩm được tích chọn", "success");
+                                    $('#'+spanid).removeClass("badge-success");
+                                    $('#'+spanid).addClass("badge-danger");
+                                    $('#'+spanid).text("Chưa duyệt");
+                                }
+                        }
+                        else {
+                            swal("Có lỗi", data.Message,"error");
+                        }
+                    },
+                    error: function (error) {
+                        swal("Có lỗi", error, "error");
+                        //console.log("lôi "+data);
+                    },
+
+                });
+        });
+
+        $("#DeleteAll").click(function () {
+            let _lstChecked = [];
+            $(".checkSingle").each(function () {
+                if (this.checked) {
+                    _lstChecked.push(this.id);
+                }
+            });
+
+                let _url = `@Url.Action("DeleteAll","SanPham")`;
+                let _data = {
+                    trangthai: 1,//xóa
+                    lstChecked: _lstChecked
+                };
+
+            $.ajax({
+                    url: _url,
+                    type: 'Get',
+                    data: _data,
+                    traditional:true,
+                    success: function (data) {
+                        console.log(data);
+                        if (data.Success) {
+                             swal("Đã xóa!", data.Message, "success");
+                             location.reload();
+                        }
+                        else {
+                            swal("Có lỗi", data.Message,"error");
+                        }
+                    },
+                    error: function (error) {
+                        swal("Có lỗi", error, "error");
+                        //console.log("lôi "+data);
+                    },
+
+                });
+        });
+
+        $("#Duyet_BoDuyet_DaChon").click(function () {
+            let _lstChecked = [];
+            $(".checkSingle").each(function () {
+                if (this.checked) {
+                    _lstChecked.push(this.id);
+                }
+            });
+                let opt = $("#ddlDuyet").val();
+                let _url = `@Url.Action("DuyetAll","SanPham")`;
+                let _data = {
+                    trangthai: opt,
+                    lstChecked: _lstChecked
+                };
+
+            $.ajax({
+                    url: _url,
+                    type: 'Get',
+                    data: _data,
+                    traditional:true,
+                    success: function (data) {
+                        console.log(data);
+                        if (data.Success) {
+                            _lstChecked.forEach(function (item,index) {
+                                let id = item;
+                                if (opt == 1) {
+                                    swal("Đã duyệt thành công", "Các sản phẩm được tích chọn", "success");
+                                    $("#span_"+id).removeClass("badge-danger");
+                                    $("#span_"+id).addClass("badge-success");
+                                    $("#span_"+id).text("Duyệt");
+                                }
+                                else if (opt == 2) {
+                                    swal("Bỏ duyệt thành công", "Các sản phẩm được tích chọn", "success");
+                                    $("#span_"+id).removeClass("badge-success");
+                                    $("#span_"+id).addClass("badge-danger");
+                                    $("#span_"+id).text("Chưa duyệt");
+                                }
+
+                            });
+
+                        }
+                        else {
+                            swal("Có lỗi", data.Message,"error");
+                        }
+                    },
+                    error: function (error) {
+                        swal("Có lỗi", error, "error");
+                        //console.log("lôi "+data);
+                    },
+
+                });
+        });
+
+        $("#checkedAll").change(function() {
+            if (this.checked) {
+                $(".checkSingle").each(function() {
+                    this.checked=true;
+                });
+            } else {
+                $(".checkSingle").each(function() {
+                    this.checked=false;
+                });
+            }
+        });
+
+        $(".checkSingle").click(function () {
+            if ($(this).is(":checked")) {
+                var isAllChecked = 0;
+
+                $(".checkSingle").each(function() {
+                    if (!this.checked)
+                        isAllChecked = 1;
+                });
+
+                if (isAllChecked == 0) {
+                    $("#checkedAll").prop("checked", true);
+                }
+            }
+            else {
+                $("#checkedAll").prop("checked", false);
+            }
+        });
+    });
+    //cập nhật chương trình ưu đãi
+
+        $('#btnAddDiscount').click(e => {
+            $('#ModalCTUDSP').modal({ backdrop: "static" });
+        })
+        function saveCTUDSP() {
+            validationCTUDSP();
+            let _lstChecked = [];
+            $(".checkSingle").each(function () {
+                if (this.checked) {
+                    _lstChecked.push(this.id);
+                }
+            });
+            let ctudID = $('#ddlCTUD').val();
+            let typeDiscount = $('#txtTypeDiscount').val()
+            let money = '';
+            if (typeDiscount === '1') {
+                money = $('#txtGiaGiam').val()
+            } else if (typeDiscount === '2') {
+               money = $('#txtPercent').val()
+            }
+            const obj = {
+                Type: typeDiscount,
+                CTUDCode: ctudID,
+                lstProductCode: _lstChecked,
+                Discount: money
+            }
+            let _url = `@Url.Action("CreateCTUDSP","ChuongTrinhUuDai")`;
+            $.ajax({
+                url: _url,
+                data: JSON.stringify(obj),
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    if (data.Success) {
+                        swal("Thêm mới", data.Message, "success");
+                        location.reload();
+                    }
+                    else {
+                        swal("Có lỗi", data.Message, "error");
+                    }
+                },
+                error: function (error) {
+                    swal("Có lỗi", error, "error");
+                },
+            });
+        }
+        function validationCTUDSP() {
+            FormModalIsValid = true
+            ValidateRequireControl('#ddlCTUD', 'Bạn phải nhập tên chương trình ưu đãi')
+            ValidateRequireControl('#txtGiaGiam', 'Bạn phải nhập số tiền giảm giá')
+            ValidateRequireControl('#txtPercent', 'Bạn phải nhập tên chương trình ưu đãi')
+        }
+    function QLAnh(Id) {
+         $("#ModalQLAnh").modal({ backdrop: "static" });
+        loadingStart();
+        let url = '@Url.Action("_LoadList","AnhSanPham")' + '?SPID=' + Id;
+        $('#idSP').val(Id);
+        LoadAjaxContent(url, "#model_content")
+        loadingStop();
+        }
+    function DeletePicture(Id) {
+        $.ajax({
+                    url: '@Url.Action("Delete","AnhSanPham")'+'?id='+Id,
+                    type: 'Get',
+                    success: function (data) {
+                        console.log(data);
+                        if (data.Success) {
+                            //swal("Đã xóa!", data.Message, "success");
+                            QLAnh($('#idSP').val());
+                        }
+                        else {
+                            swal("Có lỗi", data.Message,"error");
+                        }
+                    },
+                    error: function (error) {
+                        swal("Có lỗi", error, "error");
+                        //console.log("lôi "+data);
+                    },
+                    cache: false,
+                    processData: false,
+                    contentType: false
+                });
+        }
+    function AddPicture() {
+        var formData = new FormData();
+            var totalFiles = document.getElementById("fUploads").files.length;
+            for (var i = 0; i < totalFiles; i++)
+            {
+                var file = document.getElementById("fUploads").files[i];
+
+                formData.append("fUploads", file);
+        }
+        formData.append("idSP",$('#idSP').val())
+            $.ajax({
+                type: "POST",
+                url: '/Admin/AnhSanPham/Upload',
+                data: formData,
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (data.Success) {
+
+                            QLAnh($('#idSP').val());
+                        }
+                        else {
+                            swal("Có lỗi", data.Message,"error");
+                        }
+                },
+                error: function (error) {
+                    swal("Có lỗi", error, "error");
+                }
+            });
+    }
+</script>
+@*Modals thêm mới chương trình ưu đãi*@
+<div class="modal fade" id="ModalCTUDSP" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mediumModalLabel">Cập nhật chương trình ưu đãi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="tile-body" id="tile-body">
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">Tên chương trình ưu đãi <span style="color:red">(*)</span></label>
+                        <div class="col-md-9">
+                            @*<input class="form-control" type="text" id="" placeholder="Nhập tên đường may">*@
+                            @Html.DropDownList("ddlCTUD", (List<SelectListItem>)ViewBag.ddlChuongTrinhUuDai, "--- Tên chương trình ưu đãi ---", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3">Kiểu giảm giá <span style="color:red">(*)</span></label>
+                        <div class="col-md-9">
+                            <select class="form-control" id="txtTypeDiscount">
+                                <option value="1" selected> Giảm tiền mặt </option>
+                                <option value="2"> Giảm theo phần trăm </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row" id="hiddenGiaGiam">
+                        <label class="control-label col-md-3">Giá giảm  <span style="color:red">(*)</span></label>
+                        <div class="col-md-9">
+                            <input type="number" class="form-control" id="txtGiaGiam" placeholder="Nhập tiền giảm giá">
+                        </div>
+                    </div>
+                    <div class="form-group row hidden-input" id="hiddenPercentDiscount">
+                        <label class="control-label col-md-3">Phần trăm giảm  <span style="color:red">(*)</span></label>
+                        <div class="col-md-9">
+                            <input type="number" class="form-control" id="txtPercent" placeholder="Nhập phần trăm giảm giá">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnSave" onclick="saveCTUDSP()">Lưu lại</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*End Modal thêm mới*@
+
+@*Modals thêm mới*@
+<div class="modal fade" id="ModalQLAnh" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog modal-md" style="width: 80%" role="document">
+        <div class="modal-content">
+            <div class="modal-loading"></div>
+            <div class="modal-header">
+                <h5 class="modal-title" id="mediumModalLabel">Quản lý ảnh</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="tile-body" id="tile-body">
+                    <input type="hidden" id="idSP" />
+                    <div class="row" id="model_content">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*End Modal thêm mới*@

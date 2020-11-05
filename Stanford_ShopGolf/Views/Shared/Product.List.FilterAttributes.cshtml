@@ -1,0 +1,236 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@model SidebarViewModel
+<div class="left-col">
+    @if (Model.ShowChuDe)
+    {
+        <div class="filter-container">
+            <div class="head-title">
+                <h5 class="fill-by">Chủ đề</h5>
+                <button class="btn btn-link" data-toggle="collapse" data-target="#fill-by-chude" aria-expanded="true" aria-controls="fill-by-chude"><i class="fa fa-minus"></i></button>
+            </div>
+            <ul class="collapse show fill-list" id="fill-by-chude">
+                @foreach (var item in Model.ChuDes)
+                {
+                    <li class="fill-item">
+                        <a href="@item.Url">@item.Name (@item.Count) </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    @if (Model.ShowBrand)
+    {
+        <div class="filter-container">
+            <div class="head-title">
+                <h5 class="fill-by">Brand</h5>
+                <button class="btn btn-link" data-toggle="collapse" data-target="#fill-by-brand" aria-expanded="true" aria-controls="fill-by-brand"><i class="fa fa-minus"></i></button>
+            </div>
+            <ul class="collapse show fill-list" id="fill-by-brand">
+                @foreach (var item in Model.Brands)
+                {
+                    <li class="fill-item">
+                        <a href="@item.Url">@item.Name (@item.Count) </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    @if (Model.ShowSize)
+    {
+        <div class="filter-container">
+            <div class="head-title">
+                <h5 class="fill-by">Sizes</h5>
+                <button class="btn btn-link" data-toggle="collapse" data-target="#fill-by-size" aria-expanded="true" aria-controls="fill-by-size"><i class="fa fa-minus"></i></button>
+            </div>
+            <ul class="collapse show fill-list" id="fill-by-size">
+                @foreach (var item in Model.Sizes)
+                {
+                    <li class="fill-item">
+                        <a href="@item.Url">@item.Name (@item.Count) </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    @if (Model.ShowLoft)
+    {
+        <div class="filter-container">
+            <div class="head-title">
+                <h5 class="fill-by">Lofts</h5>
+                <button class="btn btn-link" data-toggle="collapse" data-target="#fill-by-loft" aria-expanded="true" aria-controls="fill-by-loft"><i class="fa fa-minus"></i></button>
+            </div>
+            <ul class="collapse show fill-list" id="fill-by-loft">
+                @foreach (var item in Model.Loft)
+                {
+                    <li class="fill-item">
+                        <a href="@item.Url">@item.Name (@item.Count) </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    @if (Model.ShowBrouce)
+    {
+        <div class="filter-container">
+            <div class="head-title">
+                <h5 class="fill-by">Brouces</h5>
+                <button class="btn btn-link" data-toggle="collapse" data-target="#fill-by-brouce" aria-expanded="true" aria-controls="fill-by-brouce"><i class="fa fa-minus"></i></button>
+            </div>
+            <ul class="collapse show fill-list" id="fill-by-brouce">
+                @foreach (var item in Model.Brouce)
+                {
+                    <li class="fill-item">
+                        <a href="@item.Url">@item.Name (@item.Count) </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    @if (Model.ShowLengthSize)
+    {
+        <div class="filter-container">
+            <div class="head-title">
+                <h5 class="fill-by">LengthSizes</h5>
+                <button class="btn btn-link" data-toggle="collapse" data-target="#fill-by-LengthSize" aria-expanded="true" aria-controls="fill-by-LengthSize"><i class="fa fa-minus"></i></button>
+            </div>
+            <ul class="collapse show fill-list" id="fill-by-LengthSize">
+                @foreach (var item in Model.LengthSize)
+                {
+                    <li class="fill-item">
+                        <a href="@item.Url">@item.Name (@item.Count) </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    @if (Model.ShowWaist)
+    {
+        <div class="filter-container">
+            <div class="head-title">
+                <h5 class="fill-by">Waists</h5>
+                <button class="btn btn-link" data-toggle="collapse" data-target="#fill-by-Waist" aria-expanded="true" aria-controls="fill-by-Waist"><i class="fa fa-minus"></i></button>
+            </div>
+            <ul class="collapse show fill-list" id="fill-by-Waist">
+                @foreach (var item in Model.Waist)
+                {
+                    <li class="fill-item">
+                        <a href="@item.Url">@item.Name (@item.Count) </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    @if (Model.ShowShaft)
+    {
+        <div class="filter-container">
+            <div class="head-title">
+                <h5 class="fill-by">Shafts</h5>
+                <button class="btn btn-link" data-toggle="collapse" data-target="#fill-by-Shaft" aria-expanded="true" aria-controls="fill-by-Shaft"><i class="fa fa-minus"></i></button>
+            </div>
+            <ul class="collapse show fill-list" id="fill-by-Shaft">
+                @foreach (var item in Model.Shaft)
+                {
+                    <li class="fill-item">
+                        <a href="@item.Url">@item.Name (@item.Count) </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    @if (Model.ShowFlex)
+    {
+        <div class="filter-container">
+            <div class="head-title">
+                <h5 class="fill-by">Flexs</h5>
+                <button class="btn btn-link" data-toggle="collapse" data-target="#fill-by-Flex" aria-expanded="true" aria-controls="fill-by-Flex"><i class="fa fa-minus"></i></button>
+            </div>
+            <ul class="collapse show fill-list" id="fill-by-Flex">
+                @foreach (var item in Model.Flex)
+                {
+                    <li class="fill-item">
+                        <a href="@item.Url">@item.Name (@item.Count) </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    @if (Model.ShowWidth)
+    {
+        <div class="filter-container">
+            <div class="head-title">
+                <h5 class="fill-by">Widths</h5>
+                <button class="btn btn-link" data-toggle="collapse" data-target="#fill-by-Width" aria-expanded="true" aria-controls="fill-by-Width"><i class="fa fa-minus"></i></button>
+            </div>
+            <ul class="collapse show fill-list" id="fill-by-Width">
+                @foreach (var item in Model.Widths)
+                {
+                    <li class="fill-item">
+                        <a href="@item.Url">@item.Name (@item.Count) </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    @if (Model.ShowColor)
+    {
+        <div class="filter-container">
+            <div class="head-title">
+                <h5 class="fill-by">Colors</h5>
+                <button class="btn btn-link" data-toggle="collapse" data-target="#fill-by-Color" aria-expanded="true" aria-controls="fill-by-Color"><i class="fa fa-minus"></i></button>
+            </div>
+            <ul class="collapse show fill-list" id="fill-by-Color">
+                @foreach (var item in Model.Widths)
+                {
+                    <li class="fill-item">
+                        <a href="#" style="background-color:@item.Name;"> (@item.Count)</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', (event) => {
+            var filters = document.querySelectorAll('.filter-container ul.fill-list');
+            filters.forEach((item, key) => {
+                var filterItems = item.querySelectorAll('li');
+                if (filterItems.length > 5) {
+                    var removeds = [];
+                    hideElements(item, removeds);
+                    var btnShowAll = document.createElement('a');
+                    btnShowAll.setAttribute('href', 'javascript:void(0);');
+                    btnShowAll.classList.add("more");
+                    btnShowAll.innerText = "Xem thêm";
+                    item.parentNode.appendChild(btnShowAll);
+                    btnShowAll.onclick = function (e) {
+                        if (btnShowAll.classList.contains('more')) {
+                            showElements(item, removeds);
+                            btnShowAll.innerText = "Rút gọn";
+                            btnShowAll.classList.remove('more');
+                            btnShowAll.classList.add('hide');
+                        } else {
+                            hideElements(item, removeds);
+                            btnShowAll.innerText = "Xem thêm";
+                            btnShowAll.classList.remove('hide');
+                            btnShowAll.classList.add('more');
+                        }
+
+                    };
+                }
+            });
+        });
+        function hideElements(item, tempList) {
+            var filterItems = item.querySelectorAll('li');
+            for (var i = 5; i < filterItems.length; i++) {
+                tempList[tempList.length] = item.removeChild(filterItems[i]);
+            }
+        }
+
+        function showElements(item, tempList) {
+            for (var i = 0; i < tempList.length; i++) {
+                item.append(tempList[i]);
+            }
+            tempList = [];
+        }
+    </script>
+</div>

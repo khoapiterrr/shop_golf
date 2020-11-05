@@ -1,0 +1,14 @@
+﻿@using Stanford_ShopGolf.ViewModels
+@model CategoryViewModel
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+            @if (Model != null)
+            {
+                <li class="breadcrumb-item"><a href="/category/@Model.Id">@Model.Name</a></li>
+            }
+            <li class="breadcrumb-item active" aria-current="page">@ViewBag.tenSanPham</li>
+        </ol>
+    </nav>
+</div>
